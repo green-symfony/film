@@ -24,7 +24,7 @@ Advanced
 ---
 You can change particular behaviour.
 1. Create in root directory of this project a new file `.env.local` and copy from `.env` file section
-`###> APP (CHANGE ME) ###`
+```###> APP (CHANGE ME) ###```
 2. Change `###> APP (CHANGE ME) ###` section
 For instance (in `.env.local` file):
 ```.env

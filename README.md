@@ -1,4 +1,4 @@
-![join film](doc/film join working.gif)
+![join film](/doc/film join working.gif)
 
 What this program about?
 ---

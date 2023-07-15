@@ -4,6 +4,8 @@ What this program about?
 ---
 `film join` is based on ffmpeg.exe, and uses for join video and audio in one vedeo file.
 
+It's highly useful for anime-watchers. Download and join video with audio translations.
+
 Instalaion
 ---
 0. You should install:

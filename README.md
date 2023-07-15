@@ -1,4 +1,4 @@
-![join film](https://cloud.mail.ru/public/ybR6/eBNynN2RZ#gif)
+![join film](https://github.com/green-symfony/film/blob/main/doc/film%20join%20working.gif)
 
 What this program about?
 ---

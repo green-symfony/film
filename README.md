@@ -1,4 +1,4 @@
-![join film](./doc/film join working.gif)
+![join film](https://cloud.mail.ru/public/ybR6/eBNynN2RZ#gif)
 
 What this program about?
 ---

@@ -16,8 +16,10 @@ Optional:
 3. Execute `php ./bin/film c:c`
 4. Add absolute path to "bin" directory into "Windows Environment Variables"
 5. It's over! Open a new console.
+
 Now, in git_bash console, you can use the command `film join` for join video and audio
-5.1. Or, if you didn't set up git_bash console, you can use usual windows console (cmd)
+
+Or, if you didn't set up git_bash console, you can use usual windows console (cmd)
 and execute the following command `php film join`
 
 Advanced

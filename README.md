@@ -2,7 +2,7 @@
 
 What this program about?
 ---
-`film join` is based on ffmpeg.exe, and uses for join video and audio in one vedeo file.
+`film join` is based on ffmpeg.exe, and uses for join video and audio in one video file.
 
 Undoubtedly, you can change ffmpeg's algorithm (see Advanced section).
 

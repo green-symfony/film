@@ -35,7 +35,23 @@ You can change particular behaviour.
 4. For instance (in `.env.local` file):
 ```.env
 ###> APP (CHANGE ME) ###
+LOCALE='en_US'
+TIMEZONE='+8:00'
+
+# Decoration
 JOIN_TITLE=Good
-END_TITLE="Файлы соединены"
+END_TITLE="Files were joined!"
+
+# ffmpeg video and audio formats for searching
+SUPPORTED_FFMPEG_VIDEO_FORMATS="[.](?:MP4|AVI|MOV|FLV|WMV)"
+SUPPORTED_FFMPEG_AUDIO_FORMATS="[.](?i)(?:mp3|flac|aac|wav|mka|ogg)"
+
+# ffmpeg algorithm of converting
+FFMPEG_ALGORITHM_FOR_INPUT_VIDEO="-i"
+FFMPEG_ALGORITHM_FOR_INPUT_AUDIO="-i"
+FFMPEG_ALGORITHM_FOR_OUTPUT_VIDEO="-c:v copy -c:a aac -map 0:v:0 -map 1:a:0"
+
+# endmark (without endmark, with the same name as a source)
+ENDMARK_OUTPUT_VIDEO_FILENAME=""
 ###< APP (CHANGE ME) ###
 ```

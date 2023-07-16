@@ -315,7 +315,9 @@ class JoinCommand extends AbstractCommand
 		OutputInterface $output,
 	): void {
 		if (empty($this->commandParts)) {
-			$this->io->success('Нечего соединять');
+			$this->io->success(
+				$this->t->trans('Нечего соединять')
+			);
 			exit();
 		}
 		

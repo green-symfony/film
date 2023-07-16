@@ -17,3 +17,4 @@ ready:                                  ready
 Результат:                               Result
 "Команда %command% уже запущена для этой директории":                       "The %command% command is already running for this directory"
 "Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.":              "For merged video files, a new directory will be created, it is guaranteed."
+"Нечего соединять":                      "There is nothing to join"

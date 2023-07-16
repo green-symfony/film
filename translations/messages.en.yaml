@@ -15,6 +15,6 @@ ready:                                  ready
 "Открывай консоль, где лежат видео файлы.":                                 "Open the console where the video files are."
 "Программа объёдиняет видео с аудио в новый видео файл":                    "The program combines video with audio into a new video file"
 Результат:                               Result
-"Команда %command% уже запущена для этой директории":                       "The %command% command is already running for this directory"
+"Команда %command% уже запущена для этой директории":                       "The \"%command%\" command is already running for this directory"
 "Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.":              "For merged video files, a new directory will be created, it is guaranteed."
 "Нечего соединять":                      "There is nothing to join"

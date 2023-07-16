@@ -85,7 +85,10 @@ abstract class AbstractCommand extends Command implements SignalableCommandInter
     }
 
     public function __construct(
+		protected $env,
 		protected $arrayService,
+		protected $t,
+		protected $devLogger,
 	) {
         parent::__construct();
         // >>> Style >>>
@@ -195,7 +198,7 @@ abstract class AbstractCommand extends Command implements SignalableCommandInter
     public function handleSignal(int $signal): void
     {
 		/*
-		if (\SIGINT === $signal) {
+		if ($signal == 2 || $signal == 255) {
             $this->shutdown();
         }
 		*/
@@ -217,14 +220,14 @@ abstract class AbstractCommand extends Command implements SignalableCommandInter
 		string $default				= null,
 		bool $exitWhenDisagree		= true,
 	) {
-		$message ??= 'Right?';
+		$message ??= $this->t->trans('Right') . '?';
 		
 		$agree = $this->io->askQuestion(
 			($default !== null ? new ConfirmationQuestion($message, $default) : new ConfirmationQuestion($message))
 		);
 		
 		if ($exitWhenDisagree && !$agree) {
-			$this->io->warning('EXIT');
+			$this->io->warning($this->t->trans('EXIT'));
 			exit(Command::INVALID);
 		}
 
@@ -292,11 +295,20 @@ abstract class AbstractCommand extends Command implements SignalableCommandInter
 	}
 	
 	protected function flushOb(): void {
-		while(\ob_get_level() > 0) \ob_flush();
+		while(\ob_get_level() > 0) \ob_end_flush();
 	}
 	
 	protected function shutdown(): void {
-		$this->io->warning('Команда ' . $this->getName() . ' остановлена');
+		$this->devLogger->info(__METHOD__);
+		$this->io->warning(
+			$this->t->trans(
+				'Команда %command% остановлена',
+				parameters: [
+					'%command%'		=> $this->getName(),
+				],
+			)
+		);
+		$this->flushOb();
 		exit(Command::INVALID);
 	}
 }

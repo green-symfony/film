@@ -82,7 +82,10 @@ class JoinCommand extends AbstractCommand
 	//###> DEFAULT ###
 
     public function __construct(
+		$env,
 		$arrayService,
+		$t,
+		$devLogger,
 		//
 		private readonly string $ffmpegAbsPath,
 		private readonly string $supportedFfmpegVideoFormats,
@@ -97,10 +100,12 @@ class JoinCommand extends AbstractCommand
 		private readonly SluggerInterface $slugger,
 		private readonly Filesystem $filesystem,
 		private $carbonFactory,
-		private $t,
 	) {
         parent::__construct(
+			env:					$env,
 			arrayService:			$arrayService,
+			t:						$t,
+			devLogger:				$devLogger,
 		);
     }
 
@@ -238,14 +243,17 @@ class JoinCommand extends AbstractCommand
 			$result_code = 0;
 			\system($command, $result_code);
 			
+			$this->devLogger->info('$result_code: ' . $result_code, ['$outputVideoFilename' => $outputVideoFilename]);
+			if ($result_code == 2 || $result_code == 255) {
+				$this->shutdown();
+			}
+			
 			// dump
 			$outputVideoFilename = $this->makePathRelative($outputVideoFilename);
 			$this->io->warning([
 				$outputVideoFilename . (string) u('('.$this->t->trans('ready').')')->ensureStart(' '),
 			]);
-			
-			// exit if "ctrl + c"
-			if ($result_code == 2 || $result_code == 255) $this->shutdown();
+
 			$resultsFilenames []= $outputVideoFilename;
 		});
 		/* instead of 

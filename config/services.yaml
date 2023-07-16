@@ -20,6 +20,8 @@ services:
             $supportedFfmpegAudioFormats:   '%env(SUPPORTED_FFMPEG_AUDIO_FORMATS)%'
             ###< regex ###
             
+            $env:                           '%env(APP_ENV)%'
+            
             $joinTitle:                     '%env(JOIN_TITLE)%'
             $endTitle:                      '%env(END_TITLE)%'
             
@@ -36,6 +38,7 @@ services:
             
             ###> lib services ###
             $t:                             '@Symfony\Contracts\Translation\TranslatorInterface'
+            $devLogger:                     '@monolog.logger.dev'
             ###< lib services ###
             
             ###< SERVICES ###

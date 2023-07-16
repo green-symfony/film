@@ -7,21 +7,27 @@ services:
         
         bind:
             ###> PARAMETERS ###
+            
             ###> exe ###
             # video converter
             $ffmpegAbsPath:                 '%kernel.project_dir%/bin/exe/ffmpeg.exe'
             # ASCII Art by Text
             $figletAbsPath:                 '%kernel.project_dir%/bin/exe/figlet/figlet.exe'
             ###< exe ###
+            
             ###> regex ###
             $supportedFfmpegVideoFormats:   '%env(SUPPORTED_FFMPEG_VIDEO_FORMATS)%'
             $supportedFfmpegAudioFormats:   '%env(SUPPORTED_FFMPEG_AUDIO_FORMATS)%'
             ###< regex ###
+            
             $joinTitle:                     '%env(JOIN_TITLE)%'
             $endTitle:                      '%env(END_TITLE)%'
+            
             $ffmpegAlgorithmForInputVideo:  '%env(FFMPEG_ALGORITHM_FOR_INPUT_VIDEO)%'
             $ffmpegAlgorithmForInputAudio:  '%env(FFMPEG_ALGORITHM_FOR_INPUT_AUDIO)%'
             $ffmpegAlgorithmForOutputVideo: '%env(FFMPEG_ALGORITHM_FOR_OUTPUT_VIDEO)%'
+            
+            $endmarkOutputVideoFilename:    '%env(ENDMARK_OUTPUT_VIDEO_FILENAME)%'
             ###< PARAMETERS ###
             
             ###> SERVICES ###

@@ -62,7 +62,6 @@ class JoinCommand extends AbstractCommand
 	
 	const DESCRIPTION = 'Video in current directory join with audio with the same name (.ext doesn\'t consider)';
 	
-	const ENDMARK_OUTPUT_VIDEO_FILENAME			= '+';
 	const INPUT_AUDIO_FIND_DEPTH				= ['>= 0', '<= 1'];
 	
 	/*
@@ -94,6 +93,7 @@ class JoinCommand extends AbstractCommand
 		private readonly string $ffmpegAlgorithmForInputVideo,
 		private readonly string $ffmpegAlgorithmForInputAudio,
 		private readonly string $ffmpegAlgorithmForOutputVideo,
+		private readonly string $endmarkOutputVideoFilename,
 		private readonly SluggerInterface $slugger,
 		private readonly Filesystem $filesystem,
 		private $carbonFactory,
@@ -274,9 +274,9 @@ class JoinCommand extends AbstractCommand
 			$outputVideoFilename	= ''
 				
 				. $finderInputVideoFilename->getFilenameWithoutExtension()
-				. self::ENDMARK_OUTPUT_VIDEO_FILENAME
+				. $this->endmarkOutputVideoFilename
 				// OR INSTEAD, JUST ENSURE
-				//. (string) u($finderInputVideoFilename->getFilenameWithoutExtension())->ensureEnd(self::ENDMARK_OUTPUT_VIDEO_FILENAME)
+				//. (string) u($finderInputVideoFilename->getFilenameWithoutExtension())->ensureEnd($this->endmarkOutputVideoFilename)
 				
 				. '.'
 				. $finderInputVideoFilename->getExtension()

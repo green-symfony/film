@@ -33,6 +33,11 @@ services:
             ###> SERVICES ###
             $carbonFactory:                 '@app.carbonFactory'
             $arrayService:                  '@App\Service\ArrayService'
+            
+            ###> lib services ###
+            $t:                             '@Symfony\Contracts\Translation\TranslatorInterface'
+            ###< lib services ###
+            
             ###< SERVICES ###
         
     App\:

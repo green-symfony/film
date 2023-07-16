@@ -97,6 +97,7 @@ class JoinCommand extends AbstractCommand
 		private readonly SluggerInterface $slugger,
 		private readonly Filesystem $filesystem,
 		private $carbonFactory,
+		private $t,
 	) {
         parent::__construct(
 			arrayService:			$arrayService,
@@ -111,8 +112,8 @@ class JoinCommand extends AbstractCommand
 			// >>> ARGUMENTS >>>
 		    // >>> OPTIONS >>>
             // >>> HELP >>>
-			->setHelp(self::DESCRIPTION)
-			->setDescription(self::DESCRIPTION)
+			->setHelp($this->t->trans(self::DESCRIPTION, parameters: []))
+			->setDescription($this->t->trans(self::DESCRIPTION, parameters: []))
 		;
     }
 
@@ -141,7 +142,14 @@ class JoinCommand extends AbstractCommand
 		//\dd($this->getHashOfProcess());
 		//if (!$this->lock()) {
 		if (!$this->lock($this->getHashOfProcess())) {
-			$this->io->error('Команда ' . $this->getName() . ' уже запущена для этой директории');
+			$this->io->error(
+				$this->t->trans(
+					'Команда %command% уже запущена для этой директории',
+					parameters: [
+						'%command%'		=> $this->getName(),
+					],
+				)
+			);
 			return Command::FAILURE;
 		}
 		
@@ -172,18 +180,28 @@ class JoinCommand extends AbstractCommand
 		OutputInterface $output,
 	): void {
 		
-		$this->io->section('###> СПРАВКА ###');
+		$this->io->section(
+			$this->t->trans(
+				'###> СПРАВКА ###',
+				parameters: [],
+			)
+		);
 		$this->io->info([
-			'Для того чтобы к видео был найден нужный аудио файл:',
-			'1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)',
-			'2) Аудио файл должен находится во вложенности не более 1 папки относительно видео',
+			$this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
+			$this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
+			$this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
 		]);
-		$output->writeln('<bg=black;fg=yellow> [NOTE] Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.</>');
+		$output->writeln('<bg=black;fg=yellow> [NOTE] '
+			. $this->t->trans(''
+				. 'Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.'
+			)
+			. '</>'
+		);
 		$this->io->info([
-			'Программа объёдиняет видео с аудио в новый видео файл',
-			'Исходные видео и аудио остаются прежними как есть (не изменяются)',
+			$this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
+			$this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
 		]);
-		$this->io->section('###< СПРАВКА ###');
+		$this->io->section($this->t->trans('###< СПРАВКА ###'));
 		
 	}
 	
@@ -192,7 +210,7 @@ class JoinCommand extends AbstractCommand
 		OutputInterface $output,
 	): void {
 		if (empty($this->commandParts) || $this->toDirname === null) {
-			$this->io->error('ERROR');
+			$this->io->error($this->t->trans('ERROR'));
 			return;
 		}
 		
@@ -223,7 +241,7 @@ class JoinCommand extends AbstractCommand
 			// dump
 			$outputVideoFilename = $this->makePathRelative($outputVideoFilename);
 			$this->io->warning([
-				$outputVideoFilename . ' (ready)',
+				$outputVideoFilename . (string) u('('.$this->t->trans('ready').')')->ensureStart(' '),
 			]);
 			
 			// exit if "ctrl + c"
@@ -246,7 +264,7 @@ class JoinCommand extends AbstractCommand
 		*/
 		
 		$this->io->info([
-			'ИТОГ:',
+			$this->t->trans('ИТОГ:'),
 			...$resultsFilenames,
 		]);
 	}
@@ -304,9 +322,9 @@ class JoinCommand extends AbstractCommand
 		$this->beautyDump($output);
 		
 		$infos			= [
-			'Видео',
-			'Аудио',
-			'Результат',
+			$this->t->trans('Видео'),
+			$this->t->trans('Аудио'),
+			$this->t->trans('Результат'),
 		];
 		
 		foreach($this->commandParts as [
@@ -335,8 +353,8 @@ class JoinCommand extends AbstractCommand
 		}
 		
 		$sumUpStrings = [
-			'Всего видео:',
-			'Видео с переводами:',
+			$this->t->trans('Всего видео:'),
+			$this->t->trans('Видео с переводами:'),
 		];
 		$output->writeln(
 			'<bg=black;fg=yellow>'
@@ -354,7 +372,9 @@ class JoinCommand extends AbstractCommand
 		);
 		$output->writeln('');
 		
-		$this->io->warning('Для немедленного прекращения операции нажми сочетание клавиш: "Ctrl + C"');
+		$this->io->warning(
+			$this->t->trans('Для немедленного прекращения операции нажми сочетание клавиш: "Ctrl + C"')
+		);
 	}
 	
 	private function beautyDump(
@@ -380,7 +400,7 @@ class JoinCommand extends AbstractCommand
 		//$this->flushOb();
 		\system($command);
 		$output->writeln('');
-		$this->io->warning('Открывай консоль, где лежат видео файлы.');
+		$this->io->warning($this->t->trans('Открывай консоль, где лежат видео файлы.'));
 		
 	}	
 	

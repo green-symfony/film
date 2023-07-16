@@ -1,8 +1,9 @@
 framework:
-    default_locale: en
+    default_locale:     '%env(LOCALE)%'
     translator:
-        default_path: '%kernel.project_dir%/translations'
+        default_path:   '%kernel.project_dir%/translations'
         fallbacks:
+            - ru
             - en
 #        providers:
 #            crowdin:

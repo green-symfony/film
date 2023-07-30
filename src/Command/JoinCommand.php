@@ -191,6 +191,10 @@ class JoinCommand extends AbstractCommand
 				parameters: [],
 			)
 		);
+		$output->writeln('<bg=black;fg=yellow> [NOTE] '
+			. $this->t->trans('Открывай консоль в месте расположения видео.')
+			. '</>'
+		);
 		$this->io->info([
 			$this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
 			$this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),

@@ -21,3 +21,4 @@ ready:                                  ready
 "Команда %command% остановлена":         "The command \"%command%\" was stopped"
 "Right":                                 "Right"
 "EXIT":                                  "EXIT"
+"Открывай консоль в месте расположения видео.":     "Open the console at the location of the video."

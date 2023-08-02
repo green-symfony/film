@@ -414,8 +414,6 @@ class JoinCommand extends AbstractCommand
 		//$this->flushOb();
 		\system($command);
 		$output->writeln('');
-		$this->io->warning($this->t->trans('Открывай консоль, где лежат видео файлы.'));
-		
 	}	
 	
 	private function getInputAudioFilename(

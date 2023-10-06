@@ -20,8 +20,6 @@ services:
             $supportedFfmpegAudioFormats:   '%env(SUPPORTED_FFMPEG_AUDIO_FORMATS)%'
             ###< regex ###
             
-            $env:                           '%env(APP_ENV)%'
-            
             $joinTitle:                     '%env(JOIN_TITLE)%'
             $endTitle:                      '%env(END_TITLE)%'
             
@@ -30,15 +28,23 @@ services:
             $ffmpegAlgorithmForOutputVideo: '%env(FFMPEG_ALGORITHM_FOR_OUTPUT_VIDEO)%'
             
             $endmarkOutputVideoFilename:    '%env(ENDMARK_OUTPUT_VIDEO_FILENAME)%'
+            
+            $yearRegex:                 '%gs_service.year_regex%'
+            $yearRegexFull:             '%gs_service.year_regex_full%'
+            $ipV4Regex:                 '%gs_service.ip_v4_regex%'
+            $slashOfIpRegex:            '%gs_service.slash_of_ip_regex%'
+            $progressBarSpin:           '%gs_command.progress_bar_spin%'
+            $devLogger:                 '@monolog.logger.gs_command.dev_logger'
             ###< PARAMETERS ###
             
             ###> SERVICES ###
-            $carbonFactory:                 '@app.carbonFactory'
-            $arrayService:                  '@App\Service\ArrayService'
+            $carbonFactory:         '@gs_service.carbon_factory'
+            $arrayService:          '@App\Service\ArrayService'
+            $stringService:         '@App\Service\StringService'
+            $regexService:          '@App\Service\RegexService'
             
             ###> lib services ###
-            $t:                             '@Symfony\Contracts\Translation\TranslatorInterface'
-            $devLogger:                     '@monolog.logger.dev'
+            $t: '@Symfony\Contracts\Translation\TranslatorInterface'
             ###< lib services ###
             
             ###< SERVICES ###
@@ -49,15 +55,3 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
-    ###> SERVICES ###
-    app.carbonFactory:
-        class:              'Carbon\FactoryImmutable'
-        arguments:
-        -   locale:         '%env(LOCALE)%'
-            timezone:       '%env(TIMEZONE)%'
-            strictMode:     true
-            monthOverflow:  true
-            yearOverflow:   true
-            toStringFormat: 'd.m.Y H:i:s P'
-    ###< SERVICES ###

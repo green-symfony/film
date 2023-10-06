@@ -50,6 +50,9 @@ use Symfony\Component\Console\Input\{
 use Symfony\Component\Console\Output\{
     OutputInterface
 };
+use App\Service\ArrayService;
+use App\Service\StringService;
+use App\Service\RegexService;
 
 /*
 */
@@ -60,7 +63,10 @@ class JoinCommand extends AbstractCommand
 {
 	use LockableTrait;
 	
-	const DESCRIPTION = 'Video in current directory join with audio with the same name (.ext doesn\'t consider)';
+	const DESCRIPTION = ''
+		. 'Video in current directory join with audio with the same name'
+		. '(.ext doesn\'t consider)'
+	;
 	
 	const INPUT_AUDIO_FIND_DEPTH = ['== 0', '== 1'];/* first 0 then 1 */
 	
@@ -82,11 +88,15 @@ class JoinCommand extends AbstractCommand
 	//###> DEFAULT ###
 
     public function __construct(
-		$env,
-		$arrayService,
-		$t,
 		$devLogger,
+		$t,
+		$progressBarSpin,
 		//
+		private readonly ArrayService $arrayService,
+		private readonly StringService $stringService,
+		private readonly RegexService $regexService,
+		private readonly SluggerInterface $slugger,
+		private readonly Filesystem $filesystem,
 		private readonly string $ffmpegAbsPath,
 		private readonly string $supportedFfmpegVideoFormats,
 		private readonly string $supportedFfmpegAudioFormats,
@@ -97,15 +107,12 @@ class JoinCommand extends AbstractCommand
 		private readonly string $ffmpegAlgorithmForInputAudio,
 		private readonly string $ffmpegAlgorithmForOutputVideo,
 		private readonly string $endmarkOutputVideoFilename,
-		private readonly SluggerInterface $slugger,
-		private readonly Filesystem $filesystem,
 		private $carbonFactory,
 	) {
         parent::__construct(
-			env:					$env,
-			arrayService:			$arrayService,
-			t:						$t,
-			devLogger:				$devLogger,
+			devLogger:			$devLogger,
+			t:					$t,
+			progressBarSpin:	$progressBarSpin,
 		);
     }
 
@@ -114,11 +121,11 @@ class JoinCommand extends AbstractCommand
 		parent::configure();
 		
 		$this
-			// >>> ARGUMENTS >>>
-		    // >>> OPTIONS >>>
-            // >>> HELP >>>
-			->setHelp($this->t->trans(self::DESCRIPTION, parameters: []))
-			->setDescription($this->t->trans(self::DESCRIPTION, parameters: []))
+			//###> ARGUMENTS ###
+		    //###> OPTIONS ###
+            //###> HELP ###
+			->setHelp($this->t->trans(self::DESCRIPTION))
+			->setDescription($this->t->trans(self::DESCRIPTION))
 		;
     }
 
@@ -128,8 +135,7 @@ class JoinCommand extends AbstractCommand
     ) {
 		parent::initialize($input, $output);
 		
-		$this->fromRoot			= $this->getRoot();
-		//$this->flushOb();
+		$this->fromRoot = $this->getRoot();
     }
 	
     protected function execute(
@@ -144,21 +150,7 @@ class JoinCommand extends AbstractCommand
 		
 		$this->isOk();
 		
-		//\dd($this->getHashOfProcess());
-		//if (!$this->lock()) {
-		if (!$this->lock($this->getHashOfProcess())) {
-			$this->io->error(
-				$this->t->trans(
-					'Команда %command% уже запущена для этой директории',
-					parameters: [
-						'%command%'		=> $this->getName(),
-					],
-				)
-			);
-			return Command::FAILURE;
-		}
-		
-		parent::execute($input, $output);
+		$this->tryToLock();
 		
 		$this->ffmpegExec($output);
 		
@@ -167,7 +159,21 @@ class JoinCommand extends AbstractCommand
 		return Command::SUCCESS;
     }
 	
+	
 	//###> HELPER ###
+	
+	private function tryToLock(): void {
+		if (!$this->lock($this->getHashOfProcess())) {
+			$this->exit(
+				$this->t->trans(
+					'Команда %command% уже запущена для этой директории',
+					parameters: [
+						'%command%' => $this->getName(),
+					],
+				)
+			);
+		}
+	}
 	
 	private function assignNonExistentToDirname(): void {
 		/* more safe
@@ -223,7 +229,7 @@ class JoinCommand extends AbstractCommand
 			return;
 		}
 		
-		$this->filesystem->mkdir($this->getPath($this->getRoot(), $this->toDirname));
+		$this->filesystem->mkdir($this->stringService->getPath($this->getRoot(), $this->toDirname));
 		
 		$resultsFilenames = [];
 		\array_walk($this->commandParts, function(&$commandPart) use (&$resultsFilenames, &$output) {
@@ -234,7 +240,7 @@ class JoinCommand extends AbstractCommand
 			] = $commandPart;
 			
 			// ffmpeg algorithm
-			$command	= '"' . $this->getPath($this->ffmpegAbsPath) . '"'
+			$command	= '"' . $this->stringService->getPath($this->ffmpegAbsPath) . '"'
 				. (string) u($this->ffmpegAlgorithmForInputVideo)->ensureEnd(' ')->ensureStart(' ') 
 				. '"' . $inputVideoFilename . '"'
 				. (string) u($this->ffmpegAlgorithmForInputAudio)->ensureEnd(' ')->ensureStart(' ')
@@ -247,10 +253,11 @@ class JoinCommand extends AbstractCommand
 			$result_code = 0;
 			\system($command, $result_code);
 			
-			$this->devLogger->info('$result_code: ' . $result_code, ['$outputVideoFilename' => $outputVideoFilename]);
-			if ($result_code == 2 || $result_code == 255) {
-				$this->shutdown();
-			}
+			$this->devLogger->info(
+				'$result_code: ' . $result_code, ['$outputVideoFilename' => $outputVideoFilename],
+			);
+			
+			if ($result_code != 0) $this->shutdown();
 			
 			// dump
 			$outputVideoFilename = $this->makePathRelative($outputVideoFilename);
@@ -312,12 +319,12 @@ class JoinCommand extends AbstractCommand
 				. $finderInputVideoFilename->getExtension()
 			;
 			
-			//\dd($this->getPath($this->fromRoot, $inputAudioFilename));
+			//\dd($this->stringService->getPath($this->fromRoot, $inputAudioFilename));
 			$this->commandParts		[]=
 			[
-				'inputVideoFilename'		=> $this->getPath($this->fromRoot, $inputVideoFilename),
-				'inputAudioFilename'		=> $this->getPath($this->fromRoot, $inputAudioFilename),
-				'outputVideoFilename'		=> $this->getPath($this->fromRoot, $this->toDirname, $outputVideoFilename),
+				'inputVideoFilename'		=> $this->stringService->getPath($this->fromRoot, $inputVideoFilename),
+				'inputAudioFilename'		=> $this->stringService->getPath($this->fromRoot, $inputAudioFilename),
+				'outputVideoFilename'		=> $this->stringService->getPath($this->fromRoot, $this->toDirname, $outputVideoFilename),
 			];
 			//\dd($this->commandParts);
 		}
@@ -335,7 +342,7 @@ class JoinCommand extends AbstractCommand
 		
 		$this->beautyDump($output);
 		
-		$infos			= [
+		$infos = [
 			$this->t->trans('Видео'),
 			$this->t->trans('Аудио'),
 			$this->t->trans('Результат'),
@@ -352,15 +359,15 @@ class JoinCommand extends AbstractCommand
 			
 			//\dd($inputVideoFilename, $inputAudioFilename);
 			$output->writeln(
-				\str_pad($infos[0], $this->getOptimalWidthForStrPad($infos[0], $infos))
+				\str_pad($infos[0], $this->stringService->getOptimalWidthForStrPad($infos[0], $infos))
 				. '"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"'
 			);
 			$output->writeln(
-				\str_pad($infos[1], $this->getOptimalWidthForStrPad($infos[1], $infos))
+				\str_pad($infos[1], $this->stringService->getOptimalWidthForStrPad($infos[1], $infos))
 				. '"<bg=white;fg=black>' . $inputAudioFilename . '</>"'
 			);
 			$output->writeln(
-				\str_pad($infos[2], $this->getOptimalWidthForStrPad($infos[2], $infos))
+				\str_pad($infos[2], $this->stringService->getOptimalWidthForStrPad($infos[2], $infos))
 				. '"<bg=green;fg=black>' . $outputVideoFilename . '</>"'
 			);
 			$output->writeln('');
@@ -374,14 +381,14 @@ class JoinCommand extends AbstractCommand
 			'<bg=black;fg=yellow>'
 			. \str_pad(
 				$sumUpStrings[0],
-				$this->getOptimalWidthForStrPad($sumUpStrings[0], $sumUpStrings)
+				$this->stringService->getOptimalWidthForStrPad($sumUpStrings[0], $sumUpStrings)
 			) . $this->allVideosCount . '</>'
 		);
 		$output->writeln(
 			'<bg=black;fg=yellow>'
 			. \str_pad(
 				$sumUpStrings[1],
-				$this->getOptimalWidthForStrPad($sumUpStrings[1], $sumUpStrings)
+				$this->stringService->getOptimalWidthForStrPad($sumUpStrings[1], $sumUpStrings)
 			) . $videosWithAudio = \count($this->commandParts) . '</>'
 		);
 		$output->writeln('');
@@ -394,8 +401,6 @@ class JoinCommand extends AbstractCommand
 	private function beautyDump(
 		OutputInterface $output,
 	): void {
-		//$emoji1	= $this->getEmoji();
-		
 		//$output->writeln('');
 		$figletRoot = \dirname($this->figletAbsPath);
 		$command = ''
@@ -404,14 +409,13 @@ class JoinCommand extends AbstractCommand
 			. ' ' . '"' . $this->figletAbsPath . '"'
 			
 			// font: without .ext
-			//. ' ' . '-f "' . $this->getPath($figletRoot, 'fonts/Moscow') . '"'
-			. ' ' . '-f "' . $this->getPath($figletRoot, 'fonts/3d_diagonal') . '"'
+			//. ' ' . '-f "' . $this->stringService->getPath($figletRoot, 'fonts/Moscow') . '"'
+			. ' ' . '-f "' . $this->stringService->getPath($figletRoot, 'fonts/3d_diagonal') . '"'
 			
 			. ' ' . '-c'
 			. ' ' . ' -- "' . $this->joinTitle . '"'
 		;
 		//\dd($command);
-		//$this->flushOb();
 		\system($command);
 		$output->writeln('');
 	}	
@@ -428,7 +432,7 @@ class JoinCommand extends AbstractCommand
 			->depth(self::INPUT_AUDIO_FIND_DEPTH)
 			->name(
 				$regex = '~^'
-					. $this->getEscapedForRegex($inputVideoFilenameWithoutExtension)
+					. $this->regexService->getEscapedStrings($inputVideoFilenameWithoutExtension)
 					. $this->supportedFfmpegAudioFormats
 					. '$~'
 			)

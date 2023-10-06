@@ -19,6 +19,12 @@ monolog:
 when@dev:
     monolog:
         handlers:
+            gs_command.dev_logger:
+                type:           rotating_file
+                max_files:      1
+                path:           "%kernel.logs_dir%/gs_command_%kernel.environment%.log"
+                level:          debug
+                channels:       ["gs_command.dev_logger"]
             main:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"

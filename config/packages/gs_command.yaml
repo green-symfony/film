@@ -1,0 +1,2 @@
+gs_command:
+    app_env: '%env(APP_ENV)%'

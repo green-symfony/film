@@ -150,7 +150,7 @@ class JoinCommand extends AbstractCommand
 		
 		$this->isOk();
 		
-		$this->tryToLock();
+		$this->lockOrExit();
 		
 		$this->ffmpegExec($output);
 		
@@ -162,7 +162,7 @@ class JoinCommand extends AbstractCommand
 	
 	//###> HELPER ###
 	
-	private function tryToLock(): void {
+	private function lockOrExit(): void {
 		if (!$this->lock($this->getHashOfProcess())) {
 			$this->exit(
 				$this->t->trans(

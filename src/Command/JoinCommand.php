@@ -62,7 +62,7 @@ class JoinCommand extends AbstractCommand
 	
 	const DESCRIPTION = 'Video in current directory join with audio with the same name (.ext doesn\'t consider)';
 	
-	const INPUT_AUDIO_FIND_DEPTH				= ['>= 0', '<= 1'];
+	const INPUT_AUDIO_FIND_DEPTH = ['== 0', '== 1'];/* first 0 then 1 */
 	
 	/*
 		[
@@ -441,6 +441,7 @@ class JoinCommand extends AbstractCommand
 				\iterator_to_array($finderInputAudioFilenames),
 			)
 		);
+		
 		if (isset($inputAudioFilenames[0])) $inputAudioFilename = $inputAudioFilenames[0];
 		
 		//\dd($inputAudioFilenames, $inputAudioFilename);

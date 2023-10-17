@@ -8,7 +8,7 @@ Undoubtedly, you can change ffmpeg's algorithm (see Advanced section).
 
 It's highly useful for anime-watchers. Download and join video with audio translations.
 
-Instalaion
+Installation
 ---
 0. You should install:
 	[php](https://www.php.net/downloads.php)
@@ -19,7 +19,30 @@ Optional:
 2. Execute `composer install`
 3. Execute `php ./bin/film c:c`
 4. Add absolute path to "bin" directory into "Windows Environment Variables"
-5. It's over! Open a new console.
+5. Install the bundles (see Installation the bundles step)
+6. It's over! Open a new console.
+
+### Installation the bundles step
+
+[Before git clone](https://github.com/green-symfony/docs/blob/main/docs/bundles_green_symfony%20mkdir.md)
+
+```console
+git clone "https://github.com/green-symfony/command-bundle.git"
+```
+
+```console
+git clone "https://github.com/green-symfony/service-bundle.git"
+```
+
+Open your console into your main project directory and execute:
+
+```console
+composer install
+```
+
+```console
+./bin/film c:c
+```
 
 Now, in git_bash console, you can use the command `film join` for join video and audio
 

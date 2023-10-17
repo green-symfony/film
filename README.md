@@ -20,7 +20,7 @@ Optional:
 3. Execute `php ./bin/film c:c`
 4. Add absolute path to "bin" directory into "Windows Environment Variables"
 5. [Install the bundles](#installation-the-bundles-step)
-6. It's over! Open a new console.
+6. [Finally](#final-step)
 
 ### Installation the bundles step
 
@@ -43,6 +43,8 @@ composer install
 ```console
 ./bin/film c:c
 ```
+### Final step
+
 
 Now, in git_bash console, you can use the command `film join` for join video and audio
 

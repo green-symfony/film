@@ -45,16 +45,16 @@ composer install
 ```
 ### Final step
 
-
-Now, in git_bash console, you can use the command `film join` for join video and audio
+Restart the git_bash console.
+You can already use the command `film join` for join video with audio.
 
 Or, if you didn't set up git_bash console, you can use usual windows console (cmd)
-and execute the following command `php film join`
+and execute the following command `php "PATH_TO_FILM_FILE" join`
 
 Advanced
 ---
-You can change particular behaviour.
-1. Create in root directory of this project a new file `.env.local`
+You can change the defined behaviour.
+1. Create in root directory of this project a new file `touch ./.env.local`
 2. Copy from `.env` file section `###> APP (CHANGE ME) ###`
 3. Change `###> APP (CHANGE ME) ###` section
 4. For instance (in `.env.local` file):

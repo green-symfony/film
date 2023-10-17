@@ -13,7 +13,7 @@ Installation
 0. You should install:
 	[php](https://www.php.net/downloads.php),
 	[composer](https://getcomposer.org/download/)
-Optional:
+and optional:
 [git_bash](https://git-scm.com/downloads)
 1. Open terminal in this directory (in path line write "cmd" and push "Enter")
 2. Execute `composer install`

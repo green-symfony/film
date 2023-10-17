@@ -19,7 +19,7 @@ Optional:
 2. Execute `composer install`
 3. Execute `php ./bin/film c:c`
 4. Add absolute path to "bin" directory into "Windows Environment Variables"
-5. Install the bundles (see Installation the bundles step)
+5. [Install the bundles](#installation-the-bundles-step)
 6. It's over! Open a new console.
 
 ### Installation the bundles step

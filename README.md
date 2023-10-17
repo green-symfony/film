@@ -2,6 +2,8 @@
 
 What this program about?
 ---
+
+
 `film join` is based on ffmpeg.exe, and uses for join video and audio in one video file.
 
 Undoubtedly, you can change ffmpeg's algorithm (see Advanced section).
@@ -10,6 +12,8 @@ It's highly useful for anime-watchers. Download and join video with audio transl
 
 Installation
 ---
+
+
 0. You should install:
 	[php](https://www.php.net/downloads.php),
 	[composer](https://getcomposer.org/download/)
@@ -46,11 +50,13 @@ php ./bin/film c:c
 Restart the git_bash console.
 You can already use the command `film join` for join video with audio.
 
-Or, if you didn't set up git_bash console, you can use usual windows console (cmd)
-and execute the following command `php "PATH_TO_FILM_FILE" join`
+Or, if you haven't set up git_bash console, you can use the usual windows console (cmd)
+and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film" join`
 
 Advanced
 ---
+
+
 You can change the defined behaviour.
 1. Create in root directory of this project a new file `touch ./.env.local`
 2. Copy from `.env` file section `###> APP (CHANGE ME) ###`

@@ -11,7 +11,7 @@ It's highly useful for anime-watchers. Download and join video with audio transl
 Installation
 ---
 0. You should install:
-	[php](https://www.php.net/downloads.php)
+	[php](https://www.php.net/downloads.php),
 	[composer](https://getcomposer.org/download/)
 Optional:
 [git_bash](https://git-scm.com/downloads)

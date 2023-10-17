@@ -15,12 +15,9 @@ Installation
 	[composer](https://getcomposer.org/download/)
 and optional:
 [git_bash](https://git-scm.com/downloads)
-1. Open terminal in this directory (in path line write "cmd" and push "Enter")
-2. Execute `composer install`
-3. Execute `php ./bin/film c:c`
-4. Add absolute path to "bin" directory into "Windows Environment Variables"
-5. [Install the bundles](#installation-the-bundles-step)
-6. [Finally](#final-step)
+1. [Install the bundles](#installation-the-bundles-step)
+2. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
+3. [Finally](#final-step)
 
 ### Installation the bundles step
 
@@ -41,7 +38,7 @@ composer install
 ```
 
 ```console
-./bin/film c:c
+php ./bin/film c:c
 ```
 ### Final step
 

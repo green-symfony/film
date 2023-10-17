@@ -15,11 +15,11 @@ Installation
 	[composer](https://getcomposer.org/download/)
 and optional:
 [git_bash](https://git-scm.com/downloads)
-1. [Install the bundles](#installation-the-bundles-step)
+1. [Install the dependencies](#install-the-dependencies)
 2. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 3. [Finally](#final-step)
 
-### Installation the bundles step
+### Install the dependencies
 
 [Before git clone](https://github.com/green-symfony/docs/blob/main/docs/bundles_green_symfony%20mkdir.md)
 
@@ -40,6 +40,7 @@ composer install
 ```console
 php ./bin/film c:c
 ```
+
 ### Final step
 
 Restart the git_bash console.

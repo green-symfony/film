@@ -77,7 +77,8 @@ SUPPORTED_FFMPEG_AUDIO_FORMATS="[.](?i)(?:mp3|flac|aac|wav|mka|ogg)"
 
 # ffmpeg algorithm of converting
 FFMPEG_ALGORITHM_FOR_INPUT_VIDEO="-i"
-FFMPEG_ALGORITHM_FOR_INPUT_AUDIO="-i"
+# move (the first index of -map 1:a:0 is audio) 1.1sec right
+FFMPEG_ALGORITHM_FOR_INPUT_AUDIO="-itsoffset 1.1 -i"
 FFMPEG_ALGORITHM_FOR_OUTPUT_VIDEO="-c:v copy -c:a aac -map 0:v:0 -map 1:a:0"
 
 # endmark (without endmark, with the same name as a source)

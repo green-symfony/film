@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "green-symfony/command-bundle": "0.*",
         "green-symfony/service-bundle": "0.*",
+        "green-symfony/env-processor-bundle": "0.*",
         "nesbot/carbon": "^2.68",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
@@ -80,6 +81,10 @@
 		{
 			"type": "path",
 			"url": "./bundles/green-symfony/service-bundle"
+		},
+		{
+			"type": "path",
+			"url": "./bundles/green-symfony/env-processor-bundle"
 		}
 	]
 }

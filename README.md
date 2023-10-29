@@ -63,7 +63,9 @@ and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film"
 
 If your OS System is not Windows you must downlod the builded [ffmpeg](https://ffmpeg.org/download.html) on your own.
 
-1) Place in in the project, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/DIRECTORY_WHERE_EXECUTION_FILE_PLACES`
+0) Download [ffmpeg](https://ffmpeg.org/download.html).
+
+1) Place it in the project, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/DIRECTORY_WHERE_EXECUTION_FILE_PLACES`
 
 2) According to the path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
 

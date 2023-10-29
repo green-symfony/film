@@ -18,6 +18,7 @@ Installation
 2. [Step 3](#step-3)
 3. [Step 4](#step-4)
 4. [Finally](#final-step)
+5. [Finally](#addition)
 
 ### Step 1
 
@@ -46,19 +47,6 @@ Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute
 
 Add the absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 
-### Addition
-
-If your OS System is not Windows you must downlod the builded [ffmpeg](https://ffmpeg.org/download.html) on your own.
-
-1) Place in in the project, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg`
-
-2) According the path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
-
-```.env
-# WITHOUT END SLASH
-FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg"
-```
-
 ### Final step
 
 Restart the git_bash console.
@@ -70,6 +58,19 @@ in the directory where videos place and join video with audio.
 
 Or, if you haven't set up git_bash console, you can use the usual windows console (cmd)
 and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film" join`
+
+### Addition
+
+If your OS System is not Windows you must downlod the builded [ffmpeg](https://ffmpeg.org/download.html) on your own.
+
+1) Place in in the project, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/DIRECTORY_WHERE_EXECUTION_FILE_PLACES`
+
+2) According to the path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
+
+```.env
+# WITHOUT END SLASH
+FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/DIRECTORY_WHERE_EXECUTION_FILE_PLACES"
+```
 
 Advanced
 ---

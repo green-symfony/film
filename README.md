@@ -16,34 +16,11 @@ Installation
 
 0. You should install:
 	[php](https://www.php.net/downloads.php),
-	[composer](https://getcomposer.org/download/)
-and optional:
-[git_bash](https://git-scm.com/downloads)
-1. [Install the dependencies](#install-the-dependencies)
+	[composer](https://getcomposer.org/download/),
+	[git_bash](https://git-scm.com/downloads)
+1. Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute `./init.sh` file
 2. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 3. [Finally](#final-step)
-
-### Install the dependencies
-
-[Before git clone](https://github.com/green-symfony/docs/blob/main/docs/bundles_green_symfony%20mkdir.md)
-
-```console
-git clone "https://github.com/green-symfony/command-bundle.git"
-```
-
-```console
-git clone "https://github.com/green-symfony/service-bundle.git"
-```
-
-Open your console into your main project directory and execute:
-
-```console
-composer install
-```
-
-```console
-php ./bin/film c:c
-```
 
 ### Final step
 

@@ -70,7 +70,6 @@ If your OS System is not Windows you must downlod the builded [ffmpeg](https://f
 2) According to the path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
 
 ```.env
-# WITHOUT END SLASH
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/DIRECTORY_WHERE_EXECUTION_FILE_PLACES"
 ```
 

@@ -10,7 +10,7 @@ services:
             
             ###> exe ###
             # video converter
-            $ffmpegAbsPath:                 '%env(is_exists_path:resolve:FFMPEG_ABSOLUTE_PATH)%'
+            $ffmpegAbsPath:                 '%env(is_exists_file:resolve:FFMPEG_ABSOLUTE_PATH)%'
             # ASCII Art by Text
             $figletAbsPath:                 '%kernel.project_dir%/bin/exe/figlet/figlet.exe'
             ###< exe ###

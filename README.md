@@ -46,6 +46,19 @@ Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute
 
 Add the absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 
+### Addition
+
+If your OS System is not Windows you must downlod the builded [ffmpeg](https://ffmpeg.org/download.html) on your own.
+
+1) Place in in the project, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg`
+
+2) According the path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
+
+```.env
+# WITHOUT END SLASH
+FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg"
+```
+
 ### Final step
 
 Restart the git_bash console.

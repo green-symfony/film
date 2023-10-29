@@ -25,7 +25,7 @@ Installation
 ### Final step
 
 Restart the git_bash console.
-You can already use the command `film join` for join video with audio.
+You can already use the command `film join` in the directory where videos place for join video with audio.
 
 Or, if you haven't set up git_bash console, you can use the usual windows console (cmd)
 and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film" join`

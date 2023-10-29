@@ -83,8 +83,10 @@ class JoinCommand extends AbstractCommand
 	private array $commandParts		= [];
 	private ?string $fromRoot		= null;
 	private ?string $toDirname		= null;
-	private int $allVideosCount		= 0;
-	
+	private int $allVideosCount		= 0;	
+	private readonly string $supportedFfmpegVideoFormats;
+	private readonly string $supportedFfmpegAudioFormats;
+
 	//###> DEFAULT ###
 
     public function __construct(
@@ -97,9 +99,9 @@ class JoinCommand extends AbstractCommand
 		private readonly RegexService $regexService,
 		private readonly SluggerInterface $slugger,
 		private readonly Filesystem $filesystem,
+		string $supportedFfmpegVideoFormats,
+		string $supportedFfmpegAudioFormats,
 		private readonly string $ffmpegAbsPath,
-		private readonly string $supportedFfmpegVideoFormats,
-		private readonly string $supportedFfmpegAudioFormats,
 		private readonly string $joinTitle,
 		private readonly string $endTitle,
 		private readonly string $figletAbsPath,
@@ -114,6 +116,28 @@ class JoinCommand extends AbstractCommand
 			t:					$t,
 			progressBarSpin:	$progressBarSpin,
 		);
+
+		//###>
+		$normalizeFormats = static function(
+			string $supportedFormats,
+		): string {
+			return \preg_replace(
+				'~[^a-zа-я0-9\|]~iu',
+				'',
+				$supportedFormats,
+			);
+		};
+		$this->supportedFfmpegVideoFormats = ''
+			. '[.](?:'
+			. $normalizeFormats($supportedFfmpegVideoFormats)
+			. ')'
+		;
+		$this->supportedFfmpegAudioFormats = ''
+			. '[.](?i)(?:'
+			. $normalizeFormats($supportedFfmpegAudioFormats)
+			. ')'
+		;
+		//###<
     }
 
     protected function configure(): void

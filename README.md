@@ -72,8 +72,8 @@ JOIN_TITLE=Good
 END_TITLE="The files were joined!"
 
 # ffmpeg video and audio formats for searching
-SUPPORTED_FFMPEG_VIDEO_FORMATS="[.](?:MP4|AVI|MOV|FLV|WMV)"
-SUPPORTED_FFMPEG_AUDIO_FORMATS="[.](?i)(?:mp3|flac|aac|wav|mka|ogg)"
+SUPPORTED_FFMPEG_VIDEO_FORMATS="MP4|AVI|MOV|FLV|WMV"
+SUPPORTED_FFMPEG_AUDIO_FORMATS="mp3|flac|aac|wav|mka|ogg"
 
 # ffmpeg algorithm of converting
 FFMPEG_ALGORITHM_FOR_INPUT_VIDEO="-i"

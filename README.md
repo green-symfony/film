@@ -18,9 +18,10 @@ Installation
 	[php](https://www.php.net/downloads.php),
 	[composer](https://getcomposer.org/download/),
 	[git_bash](https://git-scm.com/downloads)
-1. Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute `./init.sh` file
-2. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
-3. [Finally](#final-step)
+1. Execute `git clone "https://github.com/green-symfony/film.git"` and ROOT_DIRECTORY_OF_THIS_PROJECT will appear
+2. Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute `./init.sh` file
+3. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
+4. [Finally](#final-step)
 
 ### Final step
 

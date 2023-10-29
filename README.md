@@ -18,7 +18,7 @@ Installation
 2. [Step 3](#step-3)
 3. [Step 4](#step-4)
 4. [Finally](#final-step)
-5. [Finally](#addition)
+5. [Addition](#addition)
 
 ### Step 1
 

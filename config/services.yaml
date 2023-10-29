@@ -1,5 +1,4 @@
 parameters:
-    slash_signs: '/\'
 
 services:
     _defaults:
@@ -11,7 +10,7 @@ services:
             
             ###> exe ###
             # video converter
-            $ffmpegAbsPath:                 '%env(is_exists_path:gs_r_trim_with_param:slash_signs:resolve:FFMPEG_ABSOLUTE_PATH)%/ffmpeg.exe'
+            $ffmpegAbsPath:                 '%env(is_exists_path:resolve:FFMPEG_ABSOLUTE_PATH)%'
             # ASCII Art by Text
             $figletAbsPath:                 '%kernel.project_dir%/bin/exe/figlet/figlet.exe'
             ###< exe ###

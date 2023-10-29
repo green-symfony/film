@@ -47,6 +47,8 @@ Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute
 
 Add the absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 
+Google it if you don't know what it's about.
+
 ### Final step
 
 Restart the git_bash console.

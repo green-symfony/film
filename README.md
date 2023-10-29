@@ -23,7 +23,7 @@ Installation
 ### Step 1
 
 You should install:
-[php](https://www.php.net/downloads.php),
+[php](https://github.com/green-symfony/docs/blob/main/docs/php%20installation.md),
 [composer](https://getcomposer.org/download/),
 [git_bash](https://git-scm.com/downloads)
 

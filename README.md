@@ -13,20 +13,47 @@ It's highly useful for anime-watchers. Download and join video with audio transl
 Installation
 ---
 
-
-0. You should install:
-	[php](https://www.php.net/downloads.php),
-	[composer](https://getcomposer.org/download/),
-	[git_bash](https://git-scm.com/downloads)
-1. Execute `git clone "https://github.com/green-symfony/film.git"` and ROOT_DIRECTORY_OF_THIS_PROJECT will appear
-2. Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute `./init.sh` file
-3. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
+0. [Step 1](#step-1)
+1. [Step 2](#step-2)
+2. [Step 3](#step-3)
+3. [Step 4](#step-4)
 4. [Finally](#final-step)
+
+### Step 1
+
+You should install:
+[php](https://www.php.net/downloads.php),
+[composer](https://getcomposer.org/download/),
+[git_bash](https://git-scm.com/downloads)
+
+### Step 2
+
+Choose the directory where you want to situate this programm.
+After you've chosen just open OS console and execute
+```console
+git clone "https://github.com/green-symfony/film.git"
+```
+and ROOT_DIRECTORY_OF_THIS_PROJECT will appear
+
+### Step 3
+
+Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute 
+```console
+./init.sh
+```
+
+### Step 4
+
+Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 
 ### Final step
 
 Restart the git_bash console.
-You can already use the command `film join` in the directory where videos place for join video with audio.
+You can already use the command 
+```console
+film join
+```
+in the directory where videos place and join video with audio.
 
 Or, if you haven't set up git_bash console, you can use the usual windows console (cmd)
 and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film" join`

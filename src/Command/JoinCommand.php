@@ -142,6 +142,7 @@ class JoinCommand extends AbstractCommand
         InputInterface $input,
         OutputInterface $output,
     ): int {
+		//###> SCENARIO ###
 		$this->dimpHelpInfo($output);
 		
 		$this->fillInCommandParts();
@@ -155,6 +156,7 @@ class JoinCommand extends AbstractCommand
 		$this->ffmpegExec($output);
 		
 		$this->io->success($this->endTitle);
+		//###< SCENARIO ###
 		
 		return Command::SUCCESS;
     }
@@ -220,7 +222,6 @@ class JoinCommand extends AbstractCommand
 		
 	}
 	
-	//ffmpeg -i 'inputVideoFileName' -i 'inputAudioFilename' -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 'outputVideoFilename'
 	private function ffmpegExec(
 		OutputInterface $output,
 	): void {
@@ -267,20 +268,6 @@ class JoinCommand extends AbstractCommand
 
 			$resultsFilenames []= $outputVideoFilename;
 		});
-		/* instead of 
-		foreach($this->commandParts as [
-				'inputVideoFilename'		=> $inputVideoFilename,
-				'inputAudioFilename'		=> $inputAudioFilename,
-				'outputVideoFilename'		=> $outputVideoFilename,
-		]) {
-			$command	= '"' . $this->ffmpegAbsPath . '"'
-				. ' -y -i "' . $inputVideoFilename . '" -i "' . $inputAudioFilename . '"'
-				. ' -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 "' . $outputVideoFilename . '"'
-			;
-			
-			\system($command);
-		}
-		*/
 		
 		$this->io->info([
 			$this->t->trans('ИТОГ:'),
@@ -291,17 +278,18 @@ class JoinCommand extends AbstractCommand
 	private function fillInCommandParts(): void {
 		$this->assignNonExistentToDirname();
 		
+		$humanSort = static fn($l, $r): bool => (((int) \preg_replace('~[^0-9]+~', '', $l)) > ((int) \preg_replace('~[^0-9]+~', '', $r)));
+
 		$finderInputVideoFilenames = (new Finder)
 			->in($this->fromRoot)
 			->files()
+			->sort($humanSort)
 			->depth('== 0')
 			->name($regex = '~^.+' . $this->supportedFfmpegVideoFormats . '$~i')
 		;
-		//\dd($regex);
 		
 		foreach($finderInputVideoFilenames as $finderInputVideoFilename) {
 			++$this->allVideosCount;
-			//\dd(\iterator_to_array($finderInputVideoFilenames));
 			
 			$inputAudioFilename		= $this->getInputAudioFilename($finderInputVideoFilename);
 			if ($inputAudioFilename === null) continue;
@@ -319,14 +307,12 @@ class JoinCommand extends AbstractCommand
 				. $finderInputVideoFilename->getExtension()
 			;
 			
-			//\dd($this->stringService->getPath($this->fromRoot, $inputAudioFilename));
 			$this->commandParts		[]=
 			[
 				'inputVideoFilename'		=> $this->stringService->getPath($this->fromRoot, $inputVideoFilename),
 				'inputAudioFilename'		=> $this->stringService->getPath($this->fromRoot, $inputAudioFilename),
 				'outputVideoFilename'		=> $this->stringService->getPath($this->fromRoot, $this->toDirname, $outputVideoFilename),
 			];
-			//\dd($this->commandParts);
 		}
 	}
 	
@@ -357,7 +343,6 @@ class JoinCommand extends AbstractCommand
 			$inputAudioFilename				= $this->makePathRelative($inputAudioFilename);
 			$outputVideoFilename			= $this->makePathRelative($outputVideoFilename);
 			
-			//\dd($inputVideoFilename, $inputAudioFilename);
 			$output->writeln(
 				\str_pad($infos[0], $this->stringService->getOptimalWidthForStrPad($infos[0], $infos))
 				. '"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"'
@@ -415,7 +400,6 @@ class JoinCommand extends AbstractCommand
 			. ' ' . '-c'
 			. ' ' . ' -- "' . $this->joinTitle . '"'
 		;
-		//\dd($command);
 		\system($command);
 		$output->writeln('');
 	}	
@@ -437,7 +421,6 @@ class JoinCommand extends AbstractCommand
 					. '$~'
 			)
 		;
-		//\dd($regex);
 		
 		$inputAudioFilenames = \array_values(
 			\array_map(
@@ -447,8 +430,6 @@ class JoinCommand extends AbstractCommand
 		);
 		
 		if (isset($inputAudioFilenames[0])) $inputAudioFilename = $inputAudioFilenames[0];
-		
-		//\dd($inputAudioFilenames, $inputAudioFilename);
 		
 		return $inputAudioFilename;
 	}

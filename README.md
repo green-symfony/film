@@ -18,7 +18,7 @@ Installation
 	[php](https://www.php.net/downloads.php),
 	[composer](https://getcomposer.org/download/),
 	[git_bash](https://git-scm.com/downloads)
-1. Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute ```./init.sh``` file
+1. Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute ```console ./init.sh``` file
 2. Add absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 3. [Finally](#final-step)
 

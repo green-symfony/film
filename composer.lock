@@ -69,7 +69,7 @@
             "dist": {
                 "type": "path",
                 "url": "./bundles/green-symfony/command-bundle",
-                "reference": "6fa15bfb71768516076f20e70ee7e467c8889790"
+                "reference": "b0aac64f91ab9f138bb15b8339af9a5d2a0423e0"
             },
             "require": {
                 "green-symfony/service-bundle": "*",
@@ -113,7 +113,7 @@
             "dist": {
                 "type": "path",
                 "url": "./bundles/green-symfony/env-processor-bundle",
-                "reference": "719516d9019c599a5fdc23be06076a1f7db6f64e"
+                "reference": "a4dff9655f3d792b6125d34b96b7a1111bf7db5c"
             },
             "require": {
                 "green-symfony/service-bundle": "*",
@@ -153,7 +153,7 @@
             "dist": {
                 "type": "path",
                 "url": "./bundles/green-symfony/service-bundle",
-                "reference": "931bbd89b704c582342ec05dd8de3679acd07139"
+                "reference": "4837e38c5cedc320e797fed251d9acf6b7fdf966"
             },
             "require": {
                 "fzaninotto/faker": "^1.5",

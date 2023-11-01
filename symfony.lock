@@ -2,6 +2,9 @@
     "green-symfony/command-bundle": {
         "version": "0.0.0"
     },
+    "green-symfony/env-processor-bundle": {
+        "version": "0.0.0"
+    },
     "green-symfony/service-bundle": {
         "version": "0.0.0"
     },

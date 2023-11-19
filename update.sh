@@ -1,0 +1,10 @@
+cd "./bundles/green-symfony"
+cd "./command-bundle"
+git pull
+cd ".."
+cd "./service-bundle"
+git pull
+cd ".."
+cd "./env-processor-bundle"
+git pull
+cd "../../.."

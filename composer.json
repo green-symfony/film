@@ -1,6 +1,8 @@
 {
+	"name": "green-symfony/film",
     "type": "project",
-    "license": "proprietary",
+    "version":		"1.0.0",
+	"license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
 	"require": {

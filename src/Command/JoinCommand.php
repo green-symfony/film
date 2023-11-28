@@ -136,6 +136,9 @@ class JoinCommand extends AbstractCommand
         ;
         //###<
     }
+	
+	
+	//###> ABSTRACT REALIZATION ###
 
     protected function initialize(
         InputInterface $input,
@@ -174,6 +177,12 @@ class JoinCommand extends AbstractCommand
 
         return Command::SUCCESS;
     }
+	
+	protected function getLockName(): string {
+		return $this->getRoot();
+	}
+	
+	//###< ABSTRACT REALIZATION ###
 
 
     //###> HELPER ###
@@ -452,10 +461,5 @@ class JoinCommand extends AbstractCommand
     private function makePathRelative(string $needyPath): string
     {
         return \rtrim($this->filesystem->makePathRelative($needyPath, $this->fromRoot), '/');
-    }
-
-    private function getHashOfProcess(): string
-    {
-        return \md5($this->getRoot());
     }
 }

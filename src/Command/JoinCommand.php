@@ -140,19 +140,6 @@ class JoinCommand extends AbstractCommand
         //###<
     }
 
-    protected function configure(): void
-    {
-        parent::configure();
-
-        $this
-            //###> ARGUMENTS ###
-            //###> OPTIONS ###
-            //###> HELP ###
-            ->setHelp($this->t->trans(self::DESCRIPTION))
-            ->setDescription($this->t->trans(self::DESCRIPTION))
-        ;
-    }
-
     protected function initialize(
         InputInterface $input,
         OutputInterface $output,

@@ -65,7 +65,7 @@ class JoinCommand extends AbstractCommand
 {
     const DESCRIPTION = 'film.join_description';
 
-    const INPUT_AUDIO_FIND_DEPTH = ['== 0', '== 1'];/* first 0 then 1 */
+    const INPUT_AUDIO_FIND_DEPTH = ['>= 0', '<= 1'];
 
     /*
         [
@@ -297,7 +297,7 @@ class JoinCommand extends AbstractCommand
             ->in($this->fromRoot)
             ->files()
             ->sort($humanSort)
-            ->depth('== 0')
+            ->depth(self::INPUT_AUDIO_FIND_DEPTH)
             ->name($regex = '~^.+' . $this->supportedFfmpegVideoFormats . '$~i')
         ;
 
@@ -426,11 +426,12 @@ class JoinCommand extends AbstractCommand
     ): ?string {
         $inputAudioFilename                 = null;
         $inputVideoFilenameWithoutExtension = $finderInputVideoFilename->getFilenameWithoutExtension();
+        $inputVideoFilenameWithExtension = $finderInputVideoFilename->getFilename();
 
         $finderInputAudioFilenames          = (new Finder())
             ->in($this->fromRoot)
             ->files()
-            ->depth(self::INPUT_AUDIO_FIND_DEPTH)
+            ->depth('== 0')
             ->name(
                 $regex = '~^'
                     . $this->regexService->getEscapedStrings($inputVideoFilenameWithoutExtension)
@@ -438,6 +439,8 @@ class JoinCommand extends AbstractCommand
                     . '$~'
             )
         ;
+		
+		//$this->ddFinder($finderInputAudioFilenames);
 
         $inputAudioFilenames = \array_values(
             \array_map(
@@ -446,10 +449,16 @@ class JoinCommand extends AbstractCommand
             )
         );
 
-        if (isset($inputAudioFilenames[0])) {
-            $inputAudioFilename = $inputAudioFilenames[0];
-        }
-
+		while(isset($inputAudioFilenames[0])) {
+			$zeroInputAudioFilename = $inputAudioFilenames[0];
+			
+			if($zeroInputAudioFilename != $inputVideoFilenameWithExtension) {
+				$inputAudioFilename = $zeroInputAudioFilename;
+				break;
+			}
+			\array_shift($inputAudioFilenames);
+		}
+		
         return $inputAudioFilename;
     }
 

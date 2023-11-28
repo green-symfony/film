@@ -139,6 +139,15 @@ class JoinCommand extends AbstractCommand
 	
 	
 	//###> ABSTRACT REALIZATION ###
+	
+	/* AbstractCommand */
+	protected function getExitCuzLockMessage(): string {
+		return ''
+			. $this->t->trans('gs_command.command_word')
+			. ' ' . '"'. $this->getName() . '"'
+			. ' ' . 'может быть запущена только по одному пути за раз!'
+		;
+	}
 
     protected function initialize(
         InputInterface $input,

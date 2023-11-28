@@ -10,7 +10,7 @@ services:
             
             ###> exe ###
             # video converter
-            $ffmpegAbsPath:                 '%env(is_exists_file:resolve:FFMPEG_ABSOLUTE_PATH)%'
+            $ffmpegAbsPath:                 '%env(gs_env_is_exists_file:resolve:FFMPEG_ABSOLUTE_PATH)%'
             # ASCII Art by Text
             $figletAbsPath:                 '%kernel.project_dir%/bin/exe/figlet/figlet.exe'
             ###< exe ###
@@ -29,16 +29,20 @@ services:
             
             $endmarkOutputVideoFilename:    '%env(ENDMARK_OUTPUT_VIDEO_FILENAME)%'
             
-            $yearRegex:                 '%gs_service.year_regex%'
-            $yearRegexFull:             '%gs_service.year_regex_full%'
-            $ipV4Regex:                 '%gs_service.ip_v4_regex%'
-            $slashOfIpRegex:            '%gs_service.slash_of_ip_regex%'
+            $gsServiceYearRegex:                 '%gs_service.year_regex%'
+            $gsServiceYearRegexFull:             '%gs_service.year_regex_full%'
+            $gsServiceIpV4Regex:                 '%gs_service.ip_v4_regex%'
+            $gsServiceSlashOfIpRegex:            '%gs_service.slash_of_ip_regex%'
             $progressBarSpin:           '%gs_command.progress_bar_spin%'
             $devLogger:                 '@monolog.logger.gs_command.dev_logger'
             ###< PARAMETERS ###
             
             ###> SERVICES ###
-            $carbonFactory:         '@gs_service.carbon_factory'
+            
+            ###> BUNDLE SERVICES ###
+            $gsServiceCarbonFactory: '@gs_service.carbon_factory'
+            ###< BUNDLE SERVICES ###
+            
             $arrayService:          '@App\Service\ArrayService'
             $stringService:         '@App\Service\StringService'
             $regexService:          '@App\Service\RegexService'

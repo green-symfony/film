@@ -63,8 +63,6 @@ use App\Service\RegexService;
 )]
 class JoinCommand extends AbstractCommand
 {
-    use LockableTrait;
-
     const DESCRIPTION = ''
         . 'Video in current directory join with audio with the same name'
         . '(.ext doesn\'t consider)'
@@ -111,7 +109,7 @@ class JoinCommand extends AbstractCommand
         private readonly string $ffmpegAlgorithmForInputAudio,
         private readonly string $ffmpegAlgorithmForOutputVideo,
         private readonly string $endmarkOutputVideoFilename,
-        private $carbonFactory,
+        private $gsServiceCarbonFactory,
     ) {
         parent::__construct(
             devLogger:          $devLogger,
@@ -163,24 +161,32 @@ class JoinCommand extends AbstractCommand
 
         $this->fromRoot = $this->getRoot();
     }
+	
+	protected function execute(
+        InputInterface $input,
+        OutputInterface $output,
+    ) {
+        $this->dumpHelpInfo($output);
+		
+		return parent::execute(
+			$input,
+			$output,
+		);
+	}
 
-    protected function execute(
+    protected function command(
         InputInterface $input,
         OutputInterface $output,
     ): int {
-        $this->dimpHelpInfo($output);
-
         $this->fillInCommandParts();
 
         $this->dumpCommandParts($output);
 
         $this->isOk();
 
-        $this->lockOrExit();
-
         $this->ffmpegExec($output);
 
-        $this->io->success($this->endTitle);
+        $this->getIo()->success($this->endTitle);
 
         return Command::SUCCESS;
     }
@@ -188,28 +194,14 @@ class JoinCommand extends AbstractCommand
 
     //###> HELPER ###
 
-    private function lockOrExit(): void
-    {
-        if (!$this->lock($this->getHashOfProcess())) {
-            $this->exit(
-                $this->t->trans(
-                    'Команда %command% уже запущена для этой директории',
-                    parameters: [
-                        '%command%' => $this->getName(),
-                    ],
-                )
-            );
-        }
-    }
-
     private function assignNonExistentToDirname(): void
     {
         /* more safe
         $newDirname = (string) $this->slugger->slug(
-            (string) $this->carbonFactory->make(new \DateTime)
+            (string) $this->gsServiceCarbonFactory->make(new \DateTime)
         );
         */
-        $newDirname = \str_replace(':', '_', (string) $this->carbonFactory->make(new \DateTime()));
+        $newDirname = \str_replace(':', '_', (string) $this->gsServiceCarbonFactory->make(new \DateTime()));
 
         while (\is_dir($newDirname)) {
             $newDirname = (string) $this->slugger->slug(Uuid::v1());
@@ -217,11 +209,11 @@ class JoinCommand extends AbstractCommand
         $this->toDirname    = $newDirname;
     }
 
-    private function dimpHelpInfo(
+    private function dumpHelpInfo(
         OutputInterface $output,
     ): void {
 
-        $this->io->section(
+        $this->getIo()->section(
             $this->t->trans(
                 '###> СПРАВКА ###',
                 parameters: [],
@@ -230,7 +222,7 @@ class JoinCommand extends AbstractCommand
         $output->writeln('<bg=black;fg=yellow> [NOTE] '
             . $this->t->trans('Открывай консоль в месте расположения видео.')
             . '</>');
-        $this->io->info([
+        $this->getIo()->info([
             $this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
             $this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
             $this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
@@ -239,18 +231,18 @@ class JoinCommand extends AbstractCommand
             . $this->t->trans(''
                 . 'Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.')
             . '</>');
-        $this->io->info([
+        $this->getIo()->info([
             $this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
             $this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
         ]);
-        $this->io->section($this->t->trans('###< СПРАВКА ###'));
+        $this->getIo()->section($this->t->trans('###< СПРАВКА ###'));
     }
 
     private function ffmpegExec(
         OutputInterface $output,
     ): void {
         if (empty($this->commandParts) || $this->toDirname === null) {
-            $this->io->error($this->t->trans('ERROR'));
+            $this->getIo()->error($this->t->trans('ERROR'));
             return;
         }
 
@@ -289,14 +281,14 @@ class JoinCommand extends AbstractCommand
 
             // dump
             $outputVideoFilename = $this->makePathRelative($outputVideoFilename);
-            $this->io->warning([
+            $this->getIo()->warning([
                 $outputVideoFilename . (string) u('(' . $this->t->trans('ready') . ')')->ensureStart(' '),
             ]);
 
             $resultsFilenames [] = $outputVideoFilename;
         });
 
-        $this->io->info([
+        $this->getIo()->info([
             $this->t->trans('ИТОГ:'),
             ...$resultsFilenames,
         ]);
@@ -350,7 +342,7 @@ class JoinCommand extends AbstractCommand
         OutputInterface $output,
     ): void {
         if (empty($this->commandParts)) {
-            $this->io->success(
+            $this->getIo()->success(
                 $this->t->trans('Нечего соединять')
             );
             exit();
@@ -410,7 +402,7 @@ class JoinCommand extends AbstractCommand
         );
         $output->writeln('');
 
-        $this->io->warning(
+        $this->getIo()->warning(
             $this->t->trans('Для немедленного прекращения операции нажми сочетание клавиш: "Ctrl + C"')
         );
     }

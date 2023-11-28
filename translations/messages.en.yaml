@@ -1,3 +1,4 @@
+film.join_description:                  "Video in current directory join with audio with the same name (.ext doesn't consider)"
 "###< СПРАВКА ###":                     "###< INFO ###"
 "###> СПРАВКА ###":                     "###> INFO ###"
 "1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)":       "1) The audio file must be named exactly like the video file (the extension is not taken into account)"

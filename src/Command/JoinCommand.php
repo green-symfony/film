@@ -63,10 +63,7 @@ use App\Service\RegexService;
 )]
 class JoinCommand extends AbstractCommand
 {
-    const DESCRIPTION = ''
-        . 'Video in current directory join with audio with the same name'
-        . '(.ext doesn\'t consider)'
-    ;
+    const DESCRIPTION = 'film.join_description';
 
     const INPUT_AUDIO_FIND_DEPTH = ['== 0', '== 1'];/* first 0 then 1 */
 

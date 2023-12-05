@@ -136,18 +136,19 @@ class JoinCommand extends AbstractCommand
         ;
         //###<
     }
-	
-	
-	//###> ABSTRACT REALIZATION ###
-	
-	/* AbstractCommand */
-	protected function getExitCuzLockMessage(): string {
-		return ''
-			. $this->t->trans('gs_command.command_word')
-			. ' ' . '"'. $this->getName() . '"'
-			. ' ' . 'может быть запущена только по одному пути за раз!'
-		;
-	}
+
+
+    //###> ABSTRACT REALIZATION ###
+
+    /* AbstractCommand */
+    protected function getExitCuzLockMessage(): string
+    {
+        return ''
+            . $this->t->trans('gs_command.command_word')
+            . ' ' . '"' . $this->getName() . '"'
+            . ' ' . 'может быть запущена только по одному пути за раз!'
+        ;
+    }
 
     protected function initialize(
         InputInterface $input,
@@ -157,18 +158,18 @@ class JoinCommand extends AbstractCommand
 
         $this->fromRoot = $this->getRoot();
     }
-	
-	protected function execute(
+
+    protected function execute(
         InputInterface $input,
         OutputInterface $output,
     ) {
         $this->dumpHelpInfo($output);
-		
-		return parent::execute(
-			$input,
-			$output,
-		);
-	}
+
+        return parent::execute(
+            $input,
+            $output,
+        );
+    }
 
     protected function command(
         InputInterface $input,
@@ -186,12 +187,13 @@ class JoinCommand extends AbstractCommand
 
         return Command::SUCCESS;
     }
-	
-	protected function getLockName(): string {
-		return $this->getRoot();
-	}
-	
-	//###< ABSTRACT REALIZATION ###
+
+    protected function getLockName(): string
+    {
+        return $this->getRoot();
+    }
+
+    //###< ABSTRACT REALIZATION ###
 
 
     //###> HELPER ###
@@ -448,8 +450,8 @@ class JoinCommand extends AbstractCommand
                     . '$~'
             )
         ;
-		
-		//$this->ddFinder($finderInputAudioFilenames);
+
+        //$this->ddFinder($finderInputAudioFilenames);
 
         $inputAudioFilenames = \array_values(
             \array_map(
@@ -458,16 +460,16 @@ class JoinCommand extends AbstractCommand
             )
         );
 
-		while(isset($inputAudioFilenames[0])) {
-			$zeroInputAudioFilename = $inputAudioFilenames[0];
-			
-			if($zeroInputAudioFilename != $inputVideoFilenameWithExtension) {
-				$inputAudioFilename = $zeroInputAudioFilename;
-				break;
-			}
-			\array_shift($inputAudioFilenames);
-		}
-		
+        while (isset($inputAudioFilenames[0])) {
+            $zeroInputAudioFilename = $inputAudioFilenames[0];
+
+            if ($zeroInputAudioFilename != $inputVideoFilenameWithExtension) {
+                $inputAudioFilename = $zeroInputAudioFilename;
+                break;
+            }
+            \array_shift($inputAudioFilenames);
+        }
+
         return $inputAudioFilename;
     }
 

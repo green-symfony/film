@@ -83,6 +83,9 @@ class JoinCommand extends AbstractCommand
     private int $allVideosCount     = 0;
     private readonly string $supportedFfmpegVideoFormats;
     private readonly string $supportedFfmpegAudioFormats;
+    private readonly array $arrayOfSupportedFfmpegVideoFormatsRegex;
+    private readonly array $arrayOfSupportedFfmpegVideoFormats;
+    private ?string $firstInputVideoExt = null;
 
     //###> DEFAULT ###
 
@@ -134,6 +137,22 @@ class JoinCommand extends AbstractCommand
             . $normalizeFormats($supportedFfmpegAudioFormats)
             . ')'
         ;
+        $this->arrayOfSupportedFfmpegVideoFormats = \array_map(
+			static fn($v): string => \mb_strtolower((string) $v),
+			\array_values(
+				\array_filter(
+					\explode(
+						'|',
+						$normalizeFormats($supportedFfmpegVideoFormats),
+					),
+					static fn($v): bool => !empty($v),
+				),
+			),
+		);
+        $this->arrayOfSupportedFfmpegVideoFormatsRegex = \array_map(
+			static fn($v): string => '~^.*[.](?i)(?:' . $v . ')$~u',
+			$this->arrayOfSupportedFfmpegVideoFormats,
+		);
         //###<
     }
 
@@ -304,13 +323,42 @@ class JoinCommand extends AbstractCommand
 
         $humanSort = static fn($l, $r): bool => (((int) \preg_replace('~[^0-9]+~', '', $l)) > ((int) \preg_replace('~[^0-9]+~', '', $r)));
 
+		//###> EXT SORT
+		$arrayOfSupportedFfmpegVideoFormatsFlipped = \array_flip($this->arrayOfSupportedFfmpegVideoFormats);
+		$extSort = static function(
+			$l,
+			$r,
+		) use (
+			&$arrayOfSupportedFfmpegVideoFormatsFlipped,
+		): bool {
+			$supported = $arrayOfSupportedFfmpegVideoFormatsFlipped;
+			
+			$Lkey = \mb_strtolower($l->getExtension());
+			$Rkey = \mb_strtolower($r->getExtension());
+			
+			if (false
+				|| !isset($arrayOfSupportedFfmpegVideoFormatsFlipped[$Lkey])
+				|| !isset($arrayOfSupportedFfmpegVideoFormatsFlipped[$Rkey])
+			) return false;
+			return $supported[$Lkey] > $supported[$Rkey];
+		};
+
         $finderInputVideoFilenames = (new Finder())
             ->in($this->fromRoot)
-            ->files()
             ->sort($humanSort)
+            ->files()
             ->depth(self::INPUT_AUDIO_FIND_DEPTH)
-            ->name($regex = '~^.+' . $this->supportedFfmpegVideoFormats . '$~i')
+			->sort($extSort)
+            ->name($this->arrayOfSupportedFfmpegVideoFormatsRegex)
         ;
+		
+		$arrayInputVideos = \iterator_to_array($finderInputVideoFilenames, false);
+		if (isset($arrayInputVideos[0])) {
+			$firstInputVideoExt = $arrayInputVideos[0]->getExtension();
+			if ($this->firstInputVideoExt === null) {
+				$this->firstInputVideoExt = $firstInputVideoExt;
+			}			
+		}
 
         foreach ($finderInputVideoFilenames as $finderInputVideoFilename) {
             ++$this->allVideosCount;
@@ -449,7 +497,16 @@ class JoinCommand extends AbstractCommand
                     . $this->supportedFfmpegAudioFormats
                     . '$~'
             )
+           
         ;
+		
+		if ($this->firstInputVideoExt !== null) {
+			$finderInputAudioFilenames->notName(
+				'~^.*'
+				. $this->firstInputVideoExt
+				. '$~'
+			);
+		}
 
         //$this->ddFinder($finderInputAudioFilenames);
 

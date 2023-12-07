@@ -198,7 +198,7 @@ class JoinCommand extends AbstractCommand
 
         $this->dumpCommandParts($output);
 
-        $this->isOk();
+        $this->isOk(exitWhenDisagree: true);
 
         $this->ffmpegExec($output);
 
@@ -351,14 +351,12 @@ class JoinCommand extends AbstractCommand
         $finderInputVideoFilenames = (new Finder())
             ->in($this->fromRoot)
             ->sort($humanSort)->sort($extSort)
-            ->files()
-            ->depth(self::INPUT_AUDIO_FIND_DEPTH)
+			->files()
+            ->depth(0)
             ->name($this->arrayOfSupportedFfmpegVideoFormatsRegex)
         ;
-
-        //$this->ddFinder($finderInputVideoFilenames);
-
-        $arrayInputVideos = \iterator_to_array($finderInputVideoFilenames, false);
+		
+		$arrayInputVideos = \iterator_to_array($finderInputVideoFilenames, false);
         if (isset($arrayInputVideos[0])) {
             $firstInputVideoExt = $arrayInputVideos[0]->getExtension();
             if ($this->firstInputVideoExt === null) {
@@ -496,7 +494,7 @@ class JoinCommand extends AbstractCommand
         $finderInputAudioFilenames          = (new Finder())
             ->in($this->fromRoot)
             ->files()
-            ->depth('== 0')
+            ->depth(self::INPUT_AUDIO_FIND_DEPTH)
             ->name(
                 $regex = '~^'
                     . $this->regexService->getEscapedStrings($inputVideoFilenameWithoutExtension)

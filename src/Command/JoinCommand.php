@@ -325,22 +325,19 @@ class JoinCommand extends AbstractCommand
         $humanSort = static fn($l, $r): bool => (((int) \preg_replace('~[^0-9]+~', '', $l)) > ((int) \preg_replace('~[^0-9]+~', '', $r)));
 
         //###> EXT SORT
-        $arrayOfSupportedFfmpegVideoFormatsFlipped = \array_flip($this->arrayOfSupportedFfmpegVideoFormats);
-        $extSort = static function (
-            $l,
-            $r,
-        ) use (
-            &$arrayOfSupportedFfmpegVideoFormatsFlipped,
+        $supportedVideoFormatsFlipped = \array_flip($this->arrayOfSupportedFfmpegVideoFormats);
+        $extSort = static function ($l, $r) use (
+            &$supportedVideoFormatsFlipped,
         ): bool {
-            $supported =& $arrayOfSupportedFfmpegVideoFormatsFlipped;
+            $supported =& $supportedVideoFormatsFlipped;
 
             $Lkey = \mb_strtolower($l->getExtension());
             $Rkey = \mb_strtolower($r->getExtension());
 
             if (
                 false
-                || !isset($arrayOfSupportedFfmpegVideoFormatsFlipped[$Lkey])
-                || !isset($arrayOfSupportedFfmpegVideoFormatsFlipped[$Rkey])
+                || !isset($supportedVideoFormatsFlipped[$Lkey])
+                || !isset($supportedVideoFormatsFlipped[$Rkey])
             ) {
                 return false;
             }
@@ -489,7 +486,7 @@ class JoinCommand extends AbstractCommand
     ): ?string {
         $inputAudioFilename                 = null;
         $inputVideoFilenameWithoutExtension = $finderInputVideoFilename->getFilenameWithoutExtension();
-        $inputVideoFilenameWithExtension = $finderInputVideoFilename->getFilename();
+        $inputVideoFilenameWithExtension = $finderInputVideoFilename->getRelativePathname();
 
         $finderInputAudioFilenames          = (new Finder())
             ->in($this->fromRoot)
@@ -501,26 +498,25 @@ class JoinCommand extends AbstractCommand
                     . $this->supportedFfmpegAudioFormats
                     . '$~'
             )
-
         ;
 
         if ($this->firstInputVideoExt !== null) {
-            $finderInputAudioFilenames->notName(
-                '~^.*'
-                . $this->firstInputVideoExt
-                . '$~'
-            );
+			$audioNotRelNameRegex = '~^'
+				. $this->regexService->getEscapedStrings(
+					$finderInputVideoFilename->getRelativePathname(),
+				)
+				. '$~u'
+			;
+            $finderInputAudioFilenames->notPath($audioNotRelNameRegex);
         }
-
-        //$this->ddFinder($finderInputAudioFilenames);
-
+		
         $inputAudioFilenames = \array_values(
             \array_map(
                 static fn($v) => $v->getRelativePathname(),
                 \iterator_to_array($finderInputAudioFilenames),
             )
         );
-
+		
         while (isset($inputAudioFilenames[0])) {
             $zeroInputAudioFilename = $inputAudioFilenames[0];
 

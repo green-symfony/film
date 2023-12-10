@@ -349,6 +349,7 @@ class JoinCommand extends AbstractCommand
             ->in($this->fromRoot)
             ->sort($humanSort)->sort($extSort)
 			->files()
+			->ignoreUnreadableDirs()
             ->depth(0)
             ->name($this->arrayOfSupportedFfmpegVideoFormatsRegex)
         ;
@@ -491,6 +492,7 @@ class JoinCommand extends AbstractCommand
         $finderInputAudioFilenames          = (new Finder())
             ->in($this->fromRoot)
             ->files()
+            ->ignoreUnreadableDirs()
             ->depth(self::INPUT_AUDIO_FIND_DEPTH)
             ->name(
                 $regex = '~^'

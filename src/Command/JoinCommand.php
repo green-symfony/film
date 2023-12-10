@@ -455,10 +455,6 @@ class JoinCommand extends AbstractCommand
             ) . $videosWithAudio = \count($this->commandParts) . '</>'
         );
         $output->writeln('');
-
-        $this->getIo()->warning(
-            $this->t->trans('Для немедленного прекращения операции нажми сочетание клавиш: "Ctrl + C"')
-        );
     }
 
     private function beautyDump(

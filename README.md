@@ -26,7 +26,7 @@ Installation
 
 ### Step 2
 
-Choose the directory where you want to situate this programm.
+Choose the directory where you want to situate this program.
 After you've chosen just open OS console and execute
 ```console
 git clone "https://github.com/green-symfony/film.git"
@@ -48,7 +48,7 @@ Google it if you don't know what it's about.
 
 ### Final step
 
-Restart the git_bash console.
+Restart the git_bash terminal.
 You can already use the command 
 ```console
 film join

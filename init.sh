@@ -23,4 +23,5 @@ cd ".."
 cd "../.."
 composer install
 composer dump-autoload -o
+php "./bin/film" "a:i"
 php "./bin/film" "c:c"

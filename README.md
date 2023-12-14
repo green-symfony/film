@@ -13,34 +13,35 @@ It's highly useful for anime-watchers. Download and join video with audio transl
 Installation
 ---
 
-0. [Step 1](#step-1)
-1. [Step 2](#step-2)
-2. [Step 3](#step-3)
-3. [Step 4](#step-4)
-4. [Finally](#final-step)
-5. [Addition](#addition)
+1. [Install all of it](#install-all-of-it)
+1. [Download program](#download-program)
+1. [Init](#init)
+1. [Operation System Environment Variables](#operation-system-environment-variables)
+1. [Final step](#final-step)
+1. [Addition](#addition)
+1. [Advanced](#advanced)
 
-### Step 1
+### Install all of it
 
 [Install all of it](https://github.com/green-symfony/docs/blob/main/docs/all%20the%20necessary%20programms%20for%20project.md)
 
-### Step 2
+### Download program
 
-Choose the directory where you want to situate this programm.
+Choose the directory where you want to situate this program.
 After you've chosen just open OS console and execute
 ```console
 git clone "https://github.com/green-symfony/film.git"
 ```
 and ROOT_DIRECTORY_OF_THIS_PROJECT will appear
 
-### Step 3
+### Init
 
 Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute 
 ```console
 ./init.sh
 ```
 
-### Step 4
+### Operation System Environment Variables
 
 Add the absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 
@@ -48,7 +49,7 @@ Google it if you don't know what it's about.
 
 ### Final step
 
-Restart the git_bash console.
+Restart the git_bash terminal.
 You can already use the command 
 ```console
 film join
@@ -72,7 +73,7 @@ If your OS System is not Windows you must downlod the builded [ffmpeg](https://f
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
 ```
 
-Advanced
+### Advanced
 ---
 
 

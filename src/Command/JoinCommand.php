@@ -118,7 +118,11 @@ class JoinCommand extends AbstractCommand
         );
 
         //###>
-		$this->endmarkOutputVideoFilename = $slugger->slug($endmarkOutputVideoFilename);
+		$this->endmarkOutputVideoFilename = \preg_replace(
+			'~[<>:"/\\\?*\|]~',
+			'',
+			$endmarkOutputVideoFilename,
+		);
 		
         //###>
         $normalizeFormats = static function (

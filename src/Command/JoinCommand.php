@@ -108,7 +108,7 @@ class JoinCommand extends AbstractCommand
         private readonly string $ffmpegAlgorithmForInputVideo,
         private readonly string $ffmpegAlgorithmForInputAudio,
         private readonly string $ffmpegAlgorithmForOutputVideo,
-        private readonly string $endmarkOutputVideoFilename,
+        private string $endmarkOutputVideoFilename,
         private $gsServiceCarbonFactory,
     ) {
         parent::__construct(
@@ -117,6 +117,9 @@ class JoinCommand extends AbstractCommand
             progressBarSpin:    $progressBarSpin,
         );
 
+        //###>
+		$this->endmarkOutputVideoFilename = $slugger->slug($endmarkOutputVideoFilename);
+		
         //###>
         $normalizeFormats = static function (
             string $supportedFormats,

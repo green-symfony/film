@@ -21,3 +21,7 @@ ready:                                  ready
 "Right":                                 "Right"
 "EXIT":                                  "EXIT"
 "Открывай консоль в месте расположения видео.":     "Open the console at the location of the video."
+error:
+    os:
+        ffmpeg: 'The executable file cannot be used %ffmpeg%, you need to download the ffmpeg from the official website, specifically for your operating system'
+    

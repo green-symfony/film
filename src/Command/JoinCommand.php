@@ -55,6 +55,7 @@ use Symfony\Component\Console\Output\{
 use App\Service\ArrayService;
 use App\Service\StringService;
 use App\Service\RegexService;
+use GS\Service\Service\OSService;
 
 /*
 */
@@ -63,9 +64,10 @@ use App\Service\RegexService;
 )]
 class JoinCommand extends AbstractCommand
 {
-    const DESCRIPTION = 'film.join_description';
+	public const WIN_KEY = 'windows';
+    public const DESCRIPTION = 'film.join_description';
 
-    const INPUT_AUDIO_FIND_DEPTH = ['>= 0', '<= 1'];
+    public const INPUT_AUDIO_FIND_DEPTH = ['>= 0', '<= 1'];
 
     /*
         [
@@ -110,13 +112,14 @@ class JoinCommand extends AbstractCommand
         private readonly string $ffmpegAlgorithmForOutputVideo,
         private string $endmarkOutputVideoFilename,
         private $gsServiceCarbonFactory,
+        private readonly OSService $osService,
     ) {
         parent::__construct(
             devLogger:          $devLogger,
             t:                  $t,
             progressBarSpin:    $progressBarSpin,
         );
-
+		
         //###>
 		$this->endmarkOutputVideoFilename = \preg_replace(
 			'~[<>:"/\\\?*\|]~',
@@ -230,8 +233,26 @@ class JoinCommand extends AbstractCommand
     //###< ABSTRACT REALIZATION ###
 
 
-    //###> HELPER ###
+	//###> CAN OVERRIDE ###
+	
+    protected function getOsNameByFileExt(
+		string $path,
+	): string {
+		$isWinExt = \str_ends_with(\strtolower($path), 'exe');
+		
+		if ($isWinExt) {
+			return self::WIN_KEY;
+		}
+		
+		//I'm not entirely sure about your os but I'll let you execute this file'
+		return \php_uname(mode: "s");
+	}
+	
+	//###< CAN OVERRIDE ###
+	
 
+    //###> HELPER ###
+	
     private function assignNonExistentToDirname(): void
     {
         /* more safe
@@ -295,7 +316,8 @@ class JoinCommand extends AbstractCommand
             ] = $commandPart;
 
             // ffmpeg algorithm
-            $command    = '"' . $this->stringService->getPath($this->ffmpegAbsPath) . '"'
+			$ffmpegAbsPath = Path::normalize($this->ffmpegAbsPath);
+            $command    = '"' . $this->stringService->getPath($ffmpegAbsPath) . '"'
                 . (string) u($this->ffmpegAlgorithmForInputVideo)->ensureEnd(' ')->ensureStart(' ')
                 . '"' . $inputVideoFilename . '"'
                 . (string) u($this->ffmpegAlgorithmForInputAudio)->ensureEnd(' ')->ensureStart(' ')
@@ -304,16 +326,34 @@ class JoinCommand extends AbstractCommand
                 . '"' . $outputVideoFilename . '"'
             ;
             //\dd($command);
-
-            $result_code = 0;
-            \system($command, $result_code);
+            $result_code = null;
+			$getOsNameByFileExt = $this->getOsNameByFileExt(...);
+			$this->osService
+				->setCallback(
+					static fn() => $getOsNameByFileExt($ffmpegAbsPath),
+					'ffmpeg',
+					static function() use(&$command, &$result_code) { \system($command, $result_code); return true; },
+				)
+			;
+			$wasMade = ($this->osService)(
+				callbackKey: 'ffmpeg',
+				removeCallbackAfterExecution: true,
+			);
 
             $this->devLogger->info(
                 '$result_code: ' . $result_code,
                 ['$outputVideoFilename' => $outputVideoFilename],
             );
-
-            if ($result_code != 0) {
+			
+			if ($wasMade !== true) {
+				$this->exit(
+					$this->t->trans('error.os.ffmpeg', ['%ffmpeg%' => $ffmpegAbsPath]),
+					style: 'error',
+				);
+				return;
+			}
+			
+            if ($result_code !== 0) {
                 $this->shutdown();
             }
 
@@ -326,10 +366,12 @@ class JoinCommand extends AbstractCommand
             $resultsFilenames [] = $outputVideoFilename;
         });
 
-        $this->getIo()->info([
-            $this->t->trans('ИТОГ:'),
-            ...$resultsFilenames,
-        ]);
+        if (\count($resultsFilenames) > 1) {
+			$this->getIo()->info([
+				$this->t->trans('ИТОГ:'),
+				...$resultsFilenames,
+			]);
+		}
     }
 
     private function fillInCommandParts(): void
@@ -465,11 +507,12 @@ class JoinCommand extends AbstractCommand
         OutputInterface $output,
     ): void {
         //$output->writeln('');
-        $figletRoot = \dirname($this->figletAbsPath);
+        $figletAbsPath = $this->figletAbsPath;
+        $figletRoot = \dirname($figletAbsPath);
         $command = ''
             . ' cd "' . $figletRoot . '" &&'
 
-            . ' ' . '"' . $this->figletAbsPath . '"'
+            . ' ' . '"' . $figletAbsPath . '"'
 
             // font: without .ext
             //. ' ' . '-f "' . $this->stringService->getPath($figletRoot, 'fonts/Moscow') . '"'
@@ -478,7 +521,18 @@ class JoinCommand extends AbstractCommand
             . ' ' . '-c'
             . ' ' . ' -- "' . $this->joinTitle . '"'
         ;
-        \system($command);
+		$getOsNameByFileExt = $this->getOsNameByFileExt(...);
+		$this->osService
+			->setCallback(
+				static fn() => $getOsNameByFileExt($figletAbsPath),
+				'figlet',
+				static fn() => \system($command),
+			)
+		;
+		($this->osService)(
+			callbackKey: 'figlet',
+			removeCallbackAfterExecution: true,
+		);
         $output->writeln('');
     }
 

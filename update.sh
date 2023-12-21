@@ -1,27 +1,4 @@
 git fetch origin main
-git checkout main && git merge origin/main
+git checkout main -f && git merge origin/main --no-ff -Xtheris -m'update(auto merge with the origin/main branch)'
 
-cd "./bundles/green-symfony"
-
-cd "./command-bundle"
-git fetch --all
-git checkout -b v1 -f -q
-git checkout v1 -f
-git merge origin/v1 --ff
-cd ".."
-
-cd "./service-bundle"
-git fetch --all
-git checkout -b v1 -f -q
-git checkout v1 -f
-git merge origin/v1 --ff
-cd ".."
-
-cd "./env-processor-bundle"
-git fetch --all
-git checkout -b v1 -f -q
-git checkout v1 -f
-git merge origin/v1 --ff
-cd ".."
-
-cd "../.."
+./init.sh

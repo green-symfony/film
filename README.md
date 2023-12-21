@@ -1,14 +1,15 @@
 ![join film](https://github.com/green-symfony/film/blob/main/doc/film%20join%20working.gif)
 
-What this program about?
+What's this program about?
 ---
 
+`film join` is based on the ffmpeg program, and uses to join video and audio in one video file.
 
-`film join` is based on ffmpeg.exe, and uses for join video and audio in one video file.
+Undoubtedly, you can change ffmpeg's algorithm (see [Advanced](#advanced) section).
 
-Undoubtedly, you can change ffmpeg's algorithm (see Advanced section).
-
-It's highly useful for anime-watchers. Download and join video with audio translations.
+It's highly useful for anime-watchers.
+As a rule of thumb, translations are never joined with animes FULL HD or higher.
+Download and join video with chosen audio translations.
 
 Installation
 ---
@@ -55,20 +56,20 @@ You can already use the command
 ```console
 film join
 ```
-in the directory where videos place and join video with audio.
+in the directory where videos place and join video with audio on the particular depth.
 
 Or, if you haven't set up git_bash console, you can use the usual windows console (cmd)
 and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film" join`
 
+But you have to admit that's not convenient.
+
 ### Addition
 
-If your OS System is not Windows you must downlod the builded [ffmpeg](https://ffmpeg.org/download.html) on your own.
+If your OS System is not Windows you must:
 
-0) Download [ffmpeg](https://ffmpeg.org/download.html).
-
-1) Place it in the project, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/EXECUTION_FILE`
-
-2) According to the path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
+1. Download [ffmpeg](https://ffmpeg.org/download.html).
+1. Place it in the project or somewhere else, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/EXECUTION_FILE`
+1. According to the chosen path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
 
 ```.env
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
@@ -84,13 +85,13 @@ To update this project just open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT an
 ### Advanced
 ---
 
-
 You can change the defined behaviour.
 1. Create in root directory of this project a new file `touch ./.env.local`
-2. Copy from `.env` file section `###> APP (CHANGE ME) ###`
-3. Change `###> APP (CHANGE ME) ###` section
-4. For instance (in `.env.local` file):
+1. Copy from `.env` file section `###> APP (CHANGE ME) ###`
+1. Change `###> APP (CHANGE ME) ###` section, for instance, we can write down the following:
 ```.env
+# That's the ".env.local" file
+
 ###> APP (CHANGE ME) ###
 LOCALE='en_US'
 TIMEZONE='+8:00'

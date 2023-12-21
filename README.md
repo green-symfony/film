@@ -5,7 +5,7 @@ What's this program about?
 
 `film join` is based on the ffmpeg program, and uses to join video and audio in one video file.
 
-Undoubtedly, you can change ffmpeg's algorithm (see [Advanced](#advanced) section).
+Undoubtedly, you can change ffmpeg's algorithm (see the [Advanced](#advanced) section).
 
 It's highly useful for anime-watchers.
 As a rule of thumb, translations are never joined with animes FULL HD or higher.
@@ -18,8 +18,8 @@ Installation
 1. [Download the program](#download-the-program)
 1. [Init](#init)
 1. [Operation System Environment Variables](#operation-system-environment-variables)
-1. [Final step](#final-step)
 1. [Another Operating System](#another-operating-system)
+1. [Final step](#final-step)
 1. [How to update?](#update)
 1. [Advanced](#advanced)
 
@@ -49,6 +49,18 @@ Add the absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Op
 
 Google it if you don't know what it's about.
 
+### Another Operating System
+
+If your OS System is not Windows you must:
+
+1. Download the [ffmpeg](https://ffmpeg.org/download.html) execution file exactly for your OS System.
+1. Place it in the project or somewhere else, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/EXECUTION_FILE`
+1. According to the chosen path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
+
+```.env
+FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
+```
+
 ### Final step
 
 Restart the git_bash terminal.
@@ -63,26 +75,15 @@ and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film"
 
 But you have to admit that's not convenient.
 
-### Another Operating System
-
-If your OS System is not Windows you must:
-
-1. Download the [ffmpeg](https://ffmpeg.org/download.html) execution file exactly for your OS System.
-1. Place it in the project or somewhere else, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/EXECUTION_FILE`
-1. According to the chosen path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
-
-```.env
-FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
-```
-
-### Update
+Update
+---
 
 To update this project just open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute:
 ```console
 ./update.sh
 ```
 
-### Advanced
+Advanced
 ---
 
 You can change the defined behaviour.

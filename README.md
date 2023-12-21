@@ -67,7 +67,7 @@ But you have to admit that's not convenient.
 
 If your OS System is not Windows you must:
 
-1. Download [ffmpeg](https://ffmpeg.org/download.html).
+1. Download the [ffmpeg](https://ffmpeg.org/download.html) execution file exactly for your OS System.
 1. Place it in the project or somewhere else, for example in the `ROOT_DIRECTORY_OF_THIS_PROJECT/bin/exe/ffmpeg/EXECUTION_FILE`
 1. According to the chosen path write it down in your `ROOT_DIRECTORY_OF_THIS_PROJECT/.env.local`
 

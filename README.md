@@ -106,7 +106,7 @@ SUPPORTED_FFMPEG_AUDIO_FORMATS="mp3|flac|aac|wav|mka|ogg"
 
 # ffmpeg algorithm of converting
 FFMPEG_ALGORITHM_FOR_INPUT_VIDEO="-i"
-# move (the first index of -map 1:a:0 is audio) 1.1sec right
+# move all the audio 1.1 sec right during the join
 FFMPEG_ALGORITHM_FOR_INPUT_AUDIO="-itsoffset 1.1 -i"
 FFMPEG_ALGORITHM_FOR_OUTPUT_VIDEO="-c:v copy -c:a aac -map 0:v:0 -map 1:a:0"
 

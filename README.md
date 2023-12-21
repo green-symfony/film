@@ -19,6 +19,7 @@ Installation
 1. [Operation System Environment Variables](#operation-system-environment-variables)
 1. [Final step](#final-step)
 1. [Addition](#addition)
+1. [How to update?](#update)
 1. [Advanced](#advanced)
 
 ### Install all of it
@@ -72,6 +73,11 @@ If your OS System is not Windows you must downlod the builded [ffmpeg](https://f
 ```.env
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
 ```
+
+### Update
+
+To update this project just open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute:
+`./update.sh`
 
 ### Advanced
 ---

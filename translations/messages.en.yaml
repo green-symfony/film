@@ -23,5 +23,5 @@ ready:                                  ready
 "Открывай консоль в месте расположения видео.":     "Open the console at the location of the video."
 error:
     os:
-        ffmpeg: 'The executable file cannot be used %ffmpeg% for your operational system, see "https://github.com/green-symfony/film#addition" the section Addition'
+        ffmpeg: 'The executable file cannot be used %ffmpeg% for your operational system, see "https://github.com/green-symfony/film#another-operating-system" the section Another Operating System'
     

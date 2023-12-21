@@ -19,7 +19,7 @@ Installation
 1. [Init](#init)
 1. [Operation System Environment Variables](#operation-system-environment-variables)
 1. [Final step](#final-step)
-1. [Addition](#addition)
+1. [Another Operating System](#another-operating-system)
 1. [How to update?](#update)
 1. [Advanced](#advanced)
 
@@ -63,7 +63,7 @@ and execute the following command `php "ROOT_DIRECTORY_OF_THIS_PROJECT/bin/film"
 
 But you have to admit that's not convenient.
 
-### Addition
+### Another Operating System
 
 If your OS System is not Windows you must:
 

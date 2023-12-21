@@ -77,7 +77,9 @@ FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
 ### Update
 
 To update this project just open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute:
-`./update.sh`
+```console
+./update.sh
+```
 
 ### Advanced
 ---

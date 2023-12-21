@@ -15,7 +15,7 @@ Installation
 ---
 
 1. [Install all of it](#install-all-of-it)
-1. [Download program](#download-program)
+1. [Download the program](#download-the-program)
 1. [Init](#init)
 1. [Operation System Environment Variables](#operation-system-environment-variables)
 1. [Final step](#final-step)
@@ -27,7 +27,7 @@ Installation
 
 [Install all of it](https://github.com/green-symfony/docs/blob/main/docs/all%20the%20necessary%20programms%20for%20project.md)
 
-### Download program
+### Download the program
 
 Choose the directory where you want to situate this program.
 After you've chosen just open OS console and execute

@@ -1,4 +1,4 @@
 git fetch origin main
-git checkout main && git merge origin/main -Xtheris -m'update(auto merge with the main branch)'
+git checkout main -f && git merge origin/main --no-ff -Xtheris -m'update(auto merge with the origin/main branch)'
 
 ./init.sh

@@ -14,9 +14,9 @@ Download and join video with chosen audio translations.
 Installation
 ---
 
-1. [*Install all of it](#install-all-of-it)
-1. [*Install the program](#install-the-program)
-1. [*Operation System Environment Variables](#operation-system-environment-variables)
+1. [Install all of it](#install-all-of-it)
+1. [Install the program](#install-the-program)
+1. [Operation System Environment Variables](#operation-system-environment-variables)
 1. [Another Operating System](#another-operating-system)
 1. [Final step](#final-step)
 1. [How to update?](#update)

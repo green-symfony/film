@@ -29,7 +29,7 @@ Installation
 ## Install the program
 
 Choose the directory where you want to situate this program.<br/>
-After you've chosen just open exactly the git_bash console and execute
+Open exactly the git_bash console in the chosen directory and execute
 ```console
 git clone https://github.com/green-symfony/film.git && cd ./film && ./init.sh
 ```

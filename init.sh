@@ -7,17 +7,17 @@ git clone "https://github.com/green-symfony/env-processor-bundle.git"
 
 cd "./command-bundle"
 git checkout -b v1
-git checkout v1 && git pull origin v1
+git checkout v1 -f && git pull origin v1 -Xtheirs
 cd ".."
 
 cd "./service-bundle"
 git checkout -b v1
-git checkout v1 && git pull origin v1
+git checkout v1 -f && git pull origin v1 -Xtheirs
 cd ".."
 
 cd "./env-processor-bundle"
 git checkout -b v1
-git checkout v1 && git pull origin v1
+git checkout v1 -f && git pull origin v1 -Xtheirs
 cd ".."
 
 cd "../.."

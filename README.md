@@ -52,7 +52,7 @@ If your OS System is not Windows you must:
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
 ```
 
-### Final step
+## Final step
 
 Restart the git_bash terminal.
 You can already use the command 

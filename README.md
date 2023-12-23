@@ -22,11 +22,11 @@ Installation
 1. [How to update?](#update)
 1. [Advanced](#advanced)
 
-## Install all of it
+### Install all of it
 
 [Install all of it](https://github.com/green-symfony/docs/blob/main/docs/all%20the%20necessary%20programms%20for%20project.md)
 
-## Install the program
+### Install the program
 
 Choose the directory where you want to situate this program.<br/>
 Open exactly the git_bash console in the chosen directory and execute
@@ -34,13 +34,13 @@ Open exactly the git_bash console in the chosen directory and execute
 git clone https://github.com/green-symfony/film.git && cd ./film && ./init.sh
 ```
 
-## Operation System Environment Variables
+### Operation System Environment Variables
 
 Add the absolute path to "ROOT_DIRECTORY_OF_THIS_PROJECT/bin" directory into "Operation System Environment Variables"
 
 Google it if you don't know what it's about.
 
-## Another Operating System
+### Another Operating System
 
 If your OS System is not Windows you must:
 
@@ -52,7 +52,7 @@ If your OS System is not Windows you must:
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
 ```
 
-## Final step
+### Final step
 
 Restart the git_bash terminal.
 You can already use the command 

@@ -56,6 +56,7 @@ use App\Service\ArrayService;
 use App\Service\StringService;
 use App\Service\RegexService;
 use GS\Service\Service\OSService;
+use GS\Command\Contracts\IO as GSCommandDumper;
 
 /*
 */
@@ -271,30 +272,41 @@ class JoinCommand extends AbstractCommand
     private function dumpHelpInfo(
         OutputInterface $output,
     ): void {
-
-        $this->getIo()->section(
-            $this->t->trans(
-                '###> СПРАВКА ###',
-                parameters: [],
-            )
-        );
-        $output->writeln('<bg=black;fg=yellow> [NOTE] '
-            . $this->t->trans('Открывай консоль в месте расположения видео.')
-            . '</>');
-        $this->getIo()->info([
-            $this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
-            $this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
-            $this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
-        ]);
-        $output->writeln('<bg=black;fg=yellow> [NOTE] '
-            . $this->t->trans(''
-                . 'Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.')
-            . '</>');
-        $this->getIo()->info([
-            $this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
-            $this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
-        ]);
-        $this->getIo()->section($this->t->trans('###< СПРАВКА ###'));
+		$this
+			->ioDump(
+				$this->t->trans('###> СПРАВКА ###'),
+				new GSCommandDumper\SectionIODumper(),
+			)
+			->ioDump(
+				$this->t->trans('Открывай консоль в месте расположения видео.'),
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=yellow>%s</>'),
+				afterDumpNewLines: 1,
+			)
+			->ioDump(
+				[
+					$this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
+					$this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
+					$this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
+				],
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=green> %s</>', afterDumpNewLines: 1),
+			)
+			->ioDump(
+				$this->t->trans('Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.'),
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=yellow>%s</>'),
+				afterDumpNewLines: 1,
+			)
+			->ioDump(
+				[
+					$this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
+					$this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
+				],
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=green> %s</>', afterDumpNewLines: 1),
+			)
+			->ioDump(
+				$this->t->trans('###< СПРАВКА ###'),
+				new GSCommandDumper\SectionIODumper(),
+			)
+		;
     }
 
     private function ffmpegExec(
@@ -454,42 +466,74 @@ class JoinCommand extends AbstractCommand
         $this->beautyDump($output);
 
         $infos = [
-            $this->t->trans('Видео'),
-            $this->t->trans('Аудио'),
-            $this->t->trans('Результат'),
+            $this->t->trans('Видео:'),
+            $this->t->trans('Аудио:'),
+            $this->t->trans('Результат:'),
         ];
 
         foreach (
             $this->commandParts as [
-            'inputVideoFilename' => $inputVideoFilename,
-            'inputAudioFilename'        => $inputAudioFilename,
-            'outputVideoFilename'       => $outputVideoFilename,
-            ]
-        ) {
-            $inputVideoFilename             = $this->makePathRelative($inputVideoFilename);
-            $inputAudioFilename             = $this->makePathRelative($inputAudioFilename);
-            $outputVideoFilename            = $this->makePathRelative($outputVideoFilename);
+			'inputVideoFilename' => $inputVideoFilename,
+			'inputAudioFilename' => $inputAudioFilename,
+			'outputVideoFilename' => $outputVideoFilename,
+		]) {
+            $inputVideoFilename = $this->makePathRelative($inputVideoFilename);
+            $inputAudioFilename = $this->makePathRelative($inputAudioFilename);
+            $outputVideoFilename = $this->makePathRelative($outputVideoFilename);
 
-            $output->writeln(
-                \str_pad($infos[0], $this->stringService->getOptimalWidthForStrPad($infos[0], $infos))
-                . '"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"'
-            );
-            $output->writeln(
-                \str_pad($infos[1], $this->stringService->getOptimalWidthForStrPad($infos[1], $infos))
-                . '"<bg=white;fg=black>' . $inputAudioFilename . '</>"'
-            );
-            $output->writeln(
-                \str_pad($infos[2], $this->stringService->getOptimalWidthForStrPad($infos[2], $infos))
-                . '"<bg=green;fg=black>' . $outputVideoFilename . '</>"'
-            );
-            $output->writeln('');
+			$inputVideoFormat = '<bg=yellow;fg=black%s>';
+			$inputAudioFormat = '<bg=white;fg=black%s>';
+			$outputVideoFormat = '<bg=green;fg=black%s>';
+			
+			$this->getCloneTable()
+				->setHeaders([
+					\sprintf($inputVideoFormat, ';options=reverse') . $infos[0] . '</>',
+					\sprintf($inputAudioFormat, ';options=reverse') . $infos[1] . '</>',
+					\sprintf($outputVideoFormat, ';options=reverse') . $infos[2] . '</>',
+				])
+				->setRows([
+					[
+						'"' . \sprintf($inputVideoFormat, '') . $inputVideoFilename . '</>"',
+						'"' . \sprintf($inputAudioFormat, '') . $inputAudioFilename . '</>"',
+						'"' . \sprintf($outputVideoFormat, '') . $outputVideoFilename . '</>"',
+					],
+				])
+				->render()
+			;
         }
 
         $sumUpStrings = [
             $this->t->trans('Всего видео:'),
             $this->t->trans('Видео с переводами:'),
         ];
-        $output->writeln(
+
+		//###>
+		$allFoundVideos = $this->allVideosCount;
+		
+		$videosWithAudio = \count($this->commandParts);
+		$videoWithAudioFormat = '<bg=black;fg=white%s>';
+		$videoWithAudioDopFormat = '';
+		
+		if ($allFoundVideos != $videosWithAudio) {
+			$videoWithAudioDopFormat = ',bold';
+		}
+		
+		$this->getCloneTable()
+			->setHeaders([
+				$sumUpStrings[0],
+				\sprintf($videoWithAudioFormat, ';options=underscore' . $videoWithAudioDopFormat) . $sumUpStrings[1] . '</>',
+			])
+			->setRows([
+				[
+					$allFoundVideos,
+					\sprintf($videoWithAudioFormat, ';options=underscore' . $videoWithAudioDopFormat) . $videosWithAudio . '</>',
+				],
+			])
+			->render()
+		;
+		
+		/*
+		$output->writeln(
             '<bg=black;fg=yellow>'
             . \str_pad(
                 $sumUpStrings[0],
@@ -504,6 +548,7 @@ class JoinCommand extends AbstractCommand
             ) . $videosWithAudio = \count($this->commandParts) . '</>'
         );
         $output->writeln('');
+		*/
     }
 
     private function beautyDump(

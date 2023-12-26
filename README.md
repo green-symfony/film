@@ -15,8 +15,7 @@ Installation
 ---
 
 1. [Install all of it](#install-all-of-it)
-1. [Download the program](#download-the-program)
-1. [Init](#init)
+1. [Install the program](#install-the-program)
 1. [Operation System Environment Variables](#operation-system-environment-variables)
 1. [Another Operating System](#another-operating-system)
 1. [Final step](#final-step)
@@ -27,20 +26,12 @@ Installation
 
 [Install all of it](https://github.com/green-symfony/docs/blob/main/docs/all%20the%20necessary%20programms%20for%20project.md)
 
-### Download the program
+### Install the program
 
-Choose the directory where you want to situate this program.
-After you've chosen just open OS console and execute
+Choose the directory where you want to situate this program.<br/>
+Open exactly the git_bash console in the chosen directory and execute
 ```console
-git clone "https://github.com/green-symfony/film.git"
-```
-and ROOT_DIRECTORY_OF_THIS_PROJECT will appear
-
-### Init
-
-Open git_bash into ROOT_DIRECTORY_OF_THIS_PROJECT and execute 
-```console
-./init.sh
+git clone https://github.com/green-symfony/film.git && cd ./film && ./init.sh
 ```
 
 ### Operation System Environment Variables
@@ -61,7 +52,7 @@ If your OS System is not Windows you must:
 FFMPEG_ABSOLUTE_PATH="%kernel.project_dir%/bin/exe/ffmpeg/EXECUTION_FILE"
 ```
 
-### Final step
+## Final step
 
 Restart the git_bash terminal.
 You can already use the command 

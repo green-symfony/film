@@ -554,10 +554,10 @@ class JoinCommand extends AbstractCommand
     private function beautyDump(
         OutputInterface $output,
     ): void {
-        //$output->writeln('');
         $figletAbsPath = $this->figletAbsPath;
         $figletRoot = \dirname($figletAbsPath);
-        $command = ''
+        
+		$command = ''
             . ' cd "' . $figletRoot . '" &&'
 
             . ' ' . '"' . $figletAbsPath . '"'
@@ -569,7 +569,8 @@ class JoinCommand extends AbstractCommand
             . ' ' . '-c'
             . ' ' . ' -- "' . $this->joinTitle . '"'
         ;
-        $getOsNameByFileExt = $this->getOsNameByFileExt(...);
+        
+		$getOsNameByFileExt = $this->getOsNameByFileExt(...);
         $this->osService
             ->setCallback(
                 static fn() => $getOsNameByFileExt($figletAbsPath),
@@ -581,7 +582,6 @@ class JoinCommand extends AbstractCommand
             callbackKey: 'figlet',
             removeCallbackAfterExecution: true,
         );
-        $output->writeln('');
     }
 
     private function getInputAudioFilename(

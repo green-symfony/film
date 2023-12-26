@@ -3,6 +3,15 @@
 namespace App\Command;
 
 use GS\Command\Command\AbstractCommand as GSAbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\{
+    ProgressBar,
+    FormatterHelper,
+    Table,
+    TableStyle,
+    TableSeparator
+};
 
 abstract class AbstractCommand extends GSAbstractCommand
 {
@@ -24,4 +33,34 @@ abstract class AbstractCommand extends GSAbstractCommand
     }
 
     //###< ABSTRACT REALIZATION ###
+	
+	
+    //###> YOU CAN OVERRIDE IT ###
+
+    /* AbstractCommand */
+	protected function setTable(
+        InputInterface $input,
+        OutputInterface $output,
+    ): void {
+		
+		//###> create table
+        $this->table = new Table($output); //$this->io->createTable();
+        $tableStyle = new TableStyle();
+
+        //###> customize style
+        $tableStyle
+            ->setHeaderTitleFormat('<bg=black;fg=yellow>%s</>')
+            ->setHorizontalBorderChars(' ')
+            ->setVerticalBorderChars(' ')
+            ->setDefaultCrossingChar(' ')
+        ;
+
+        //###> set style
+        $this->table
+			->setHorizontal(true)
+			->setStyle($tableStyle)
+		;
+    }
+
+    //###< YOU CAN OVERRIDE IT ###
 }

@@ -454,22 +454,38 @@ class JoinCommand extends AbstractCommand
         $this->beautyDump($output);
 
         $infos = [
-            $this->t->trans('Видео'),
-            $this->t->trans('Аудио'),
-            $this->t->trans('Результат'),
+            $this->t->trans('Видео:'),
+            $this->t->trans('Аудио:'),
+            $this->t->trans('Результат:'),
         ];
 
         foreach (
             $this->commandParts as [
-            'inputVideoFilename' => $inputVideoFilename,
-            'inputAudioFilename'        => $inputAudioFilename,
-            'outputVideoFilename'       => $outputVideoFilename,
-            ]
-        ) {
-            $inputVideoFilename             = $this->makePathRelative($inputVideoFilename);
-            $inputAudioFilename             = $this->makePathRelative($inputAudioFilename);
-            $outputVideoFilename            = $this->makePathRelative($outputVideoFilename);
+			'inputVideoFilename' => $inputVideoFilename,
+			'inputAudioFilename' => $inputAudioFilename,
+			'outputVideoFilename' => $outputVideoFilename,
+		]) {
+            $inputVideoFilename = $this->makePathRelative($inputVideoFilename);
+            $inputAudioFilename = $this->makePathRelative($inputAudioFilename);
+            $outputVideoFilename = $this->makePathRelative($outputVideoFilename);
 
+			$this->getCloneTable()
+				->setHeaders([
+					$infos[0],
+					$infos[1],
+					$infos[2],
+				])
+				->setRows([
+					[
+						'"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"',
+						'"<bg=white;fg=black>' . $inputAudioFilename . '</>"',
+						'"<bg=green;fg=black>' . $outputVideoFilename . '</>"',
+					],
+				])
+				->render()
+			;
+
+			/*
             $output->writeln(
                 \str_pad($infos[0], $this->stringService->getOptimalWidthForStrPad($infos[0], $infos))
                 . '"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"'
@@ -483,13 +499,30 @@ class JoinCommand extends AbstractCommand
                 . '"<bg=green;fg=black>' . $outputVideoFilename . '</>"'
             );
             $output->writeln('');
+			*/
         }
 
         $sumUpStrings = [
             $this->t->trans('Всего видео:'),
             $this->t->trans('Видео с переводами:'),
         ];
-        $output->writeln(
+        
+		$this->getCloneTable()
+			->setHeaders([
+				$sumUpStrings[0],
+				$sumUpStrings[1],
+			])
+			->setRows([
+				[
+					'<bg=black;fg=yellow>' . $this->allVideosCount . '</>',
+					'<bg=black;fg=yellow>' . $videosWithAudio = \count($this->commandParts) . '</>',
+				],
+			])
+			->render()
+		;
+		
+		/*
+		$output->writeln(
             '<bg=black;fg=yellow>'
             . \str_pad(
                 $sumUpStrings[0],
@@ -504,6 +537,7 @@ class JoinCommand extends AbstractCommand
             ) . $videosWithAudio = \count($this->commandParts) . '</>'
         );
         $output->writeln('');
+		*/
     }
 
     private function beautyDump(

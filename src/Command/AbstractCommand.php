@@ -42,14 +42,13 @@ abstract class AbstractCommand extends GSAbstractCommand
         InputInterface $input,
         OutputInterface $output,
     ): void {
-		
 		//###> create table
         $this->table = new Table($output); //$this->io->createTable();
         $tableStyle = new TableStyle();
 
         //###> customize style
         $tableStyle
-            ->setHeaderTitleFormat('<bg=black;fg=yellow>%s</>')
+            ->setCellHeaderFormat('<fg=white;bg=black>%s</>')
             ->setHorizontalBorderChars(' ')
             ->setVerticalBorderChars('')
             ->setDefaultCrossingChar(' ')

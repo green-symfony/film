@@ -481,17 +481,21 @@ class JoinCommand extends AbstractCommand
             $inputAudioFilename = $this->makePathRelative($inputAudioFilename);
             $outputVideoFilename = $this->makePathRelative($outputVideoFilename);
 
+			$inputVideoFormat = '<bg=yellow;fg=black%s>';
+			$inputAudioFormat = '<bg=white;fg=black%s>';
+			$outputVideoFormat = '<bg=green;fg=black%s>';
+			
 			$this->getCloneTable()
 				->setHeaders([
-					$infos[0],
-					$infos[1],
-					$infos[2],
+					\sprintf($inputVideoFormat, ';options=reverse') . $infos[0] . '</>',
+					\sprintf($inputAudioFormat, ';options=reverse') . $infos[1] . '</>',
+					\sprintf($outputVideoFormat, ';options=reverse') . $infos[2] . '</>',
 				])
 				->setRows([
 					[
-						'"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"',
-						'"<bg=white;fg=black>' . $inputAudioFilename . '</>"',
-						'"<bg=green;fg=black>' . $outputVideoFilename . '</>"',
+						'"' . \sprintf($inputVideoFormat, '') . $inputVideoFilename . '</>"',
+						'"' . \sprintf($inputAudioFormat, '') . $inputAudioFilename . '</>"',
+						'"' . \sprintf($outputVideoFormat, '') . $outputVideoFilename . '</>"',
 					],
 				])
 				->render()
@@ -502,16 +506,27 @@ class JoinCommand extends AbstractCommand
             $this->t->trans('Всего видео:'),
             $this->t->trans('Видео с переводами:'),
         ];
-        
+
+		//###>
+		$allFoundVideos = $this->allVideosCount;
+		
+		$videosWithAudio = \count($this->commandParts);
+		$videoWithAudioFormat = '<bg=black;fg=white%s>';
+		$videoWithAudioDopFormat = '';
+		
+		if ($allFoundVideos != $videosWithAudio) {
+			$videoWithAudioDopFormat = ',bold';
+		}
+		
 		$this->getCloneTable()
 			->setHeaders([
 				$sumUpStrings[0],
-				$sumUpStrings[1],
+				\sprintf($videoWithAudioFormat, ';options=underscore' . $videoWithAudioDopFormat) . $sumUpStrings[1] . '</>',
 			])
 			->setRows([
 				[
-					'<bg=black;fg=yellow>' . $this->allVideosCount . '</>',
-					'<bg=black;fg=yellow>' . $videosWithAudio = \count($this->commandParts) . '</>',
+					$allFoundVideos,
+					\sprintf($videoWithAudioFormat, ';options=underscore' . $videoWithAudioDopFormat) . $videosWithAudio . '</>',
 				],
 			])
 			->render()

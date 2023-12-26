@@ -51,7 +51,7 @@ abstract class AbstractCommand extends GSAbstractCommand
         $tableStyle
             ->setHeaderTitleFormat('<bg=black;fg=yellow>%s</>')
             ->setHorizontalBorderChars(' ')
-            ->setVerticalBorderChars(' ')
+            ->setVerticalBorderChars('')
             ->setDefaultCrossingChar(' ')
         ;
 

@@ -56,6 +56,7 @@ use App\Service\ArrayService;
 use App\Service\StringService;
 use App\Service\RegexService;
 use GS\Service\Service\OSService;
+use GS\Command\Contracts\IO as GSCommandDumper;
 
 /*
 */
@@ -271,30 +272,41 @@ class JoinCommand extends AbstractCommand
     private function dumpHelpInfo(
         OutputInterface $output,
     ): void {
-
-        $this->getIo()->section(
-            $this->t->trans(
-                '###> СПРАВКА ###',
-                parameters: [],
-            )
-        );
-        $output->writeln('<bg=black;fg=yellow> [NOTE] '
-            . $this->t->trans('Открывай консоль в месте расположения видео.')
-            . '</>');
-        $this->getIo()->info([
-            $this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
-            $this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
-            $this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
-        ]);
-        $output->writeln('<bg=black;fg=yellow> [NOTE] '
-            . $this->t->trans(''
-                . 'Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.')
-            . '</>');
-        $this->getIo()->info([
-            $this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
-            $this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
-        ]);
-        $this->getIo()->section($this->t->trans('###< СПРАВКА ###'));
+		$this
+			->ioDump(
+				$this->t->trans('###> СПРАВКА ###'),
+				new GSCommandDumper\SectionIODumper(),
+			)
+			->ioDump(
+				$this->t->trans('Открывай консоль в месте расположения видео.'),
+				new GSCommandDumper\FormattedIODumper('bg=black;fg=yellow'),
+				afterDumpNewLines: 1,
+			)
+			->ioDump(
+				[
+					$this->t->trans('Для того чтобы к видео был найден нужный аудио файл:'),
+					$this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
+					$this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
+				],
+				new GSCommandDumper\FormattedIODumper('bg=black;fg=green', afterDumpNewLines: 1),
+			)
+			->ioDump(
+				$this->t->trans('Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.'),
+				new GSCommandDumper\FormattedIODumper('bg=black;fg=yellow'),
+				afterDumpNewLines: 1,
+			)
+			->ioDump(
+				[
+					$this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
+					$this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
+				],
+				new GSCommandDumper\FormattedIODumper('bg=black;fg=green', afterDumpNewLines: 1),
+			)
+			->ioDump(
+				$this->t->trans('###< СПРАВКА ###'),
+				new GSCommandDumper\SectionIODumper(),
+			)
+		;
     }
 
     private function ffmpegExec(
@@ -484,22 +496,6 @@ class JoinCommand extends AbstractCommand
 				])
 				->render()
 			;
-
-			/*
-            $output->writeln(
-                \str_pad($infos[0], $this->stringService->getOptimalWidthForStrPad($infos[0], $infos))
-                . '"<bg=yellow;fg=black>' . $inputVideoFilename . '</>"'
-            );
-            $output->writeln(
-                \str_pad($infos[1], $this->stringService->getOptimalWidthForStrPad($infos[1], $infos))
-                . '"<bg=white;fg=black>' . $inputAudioFilename . '</>"'
-            );
-            $output->writeln(
-                \str_pad($infos[2], $this->stringService->getOptimalWidthForStrPad($infos[2], $infos))
-                . '"<bg=green;fg=black>' . $outputVideoFilename . '</>"'
-            );
-            $output->writeln('');
-			*/
         }
 
         $sumUpStrings = [

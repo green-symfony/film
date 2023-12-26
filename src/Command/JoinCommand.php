@@ -279,7 +279,7 @@ class JoinCommand extends AbstractCommand
 			)
 			->ioDump(
 				$this->t->trans('Открывай консоль в месте расположения видео.'),
-				new GSCommandDumper\FormattedIODumper('bg=black;fg=yellow'),
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=yellow>%s</>'),
 				afterDumpNewLines: 1,
 			)
 			->ioDump(
@@ -288,11 +288,11 @@ class JoinCommand extends AbstractCommand
 					$this->t->trans('1) Аудио файл должен быть назван в точности как видео файл (расширение не учитывается)'),
 					$this->t->trans('2) Аудио файл должен находится во вложенности не более 1 папки относительно видео'),
 				],
-				new GSCommandDumper\FormattedIODumper('bg=black;fg=green', afterDumpNewLines: 1),
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=green> %s</>', afterDumpNewLines: 1),
 			)
 			->ioDump(
 				$this->t->trans('Для объединённых видео файлов создаётся новая, гарантированно уникальная папка.'),
-				new GSCommandDumper\FormattedIODumper('bg=black;fg=yellow'),
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=yellow>%s</>'),
 				afterDumpNewLines: 1,
 			)
 			->ioDump(
@@ -300,7 +300,7 @@ class JoinCommand extends AbstractCommand
 					$this->t->trans('Программа объёдиняет видео с аудио в новый видео файл'),
 					$this->t->trans('Исходные видео и аудио остаются прежними как есть (не изменяются)'),
 				],
-				new GSCommandDumper\FormattedIODumper('bg=black;fg=green', afterDumpNewLines: 1),
+				new GSCommandDumper\FormattedIODumper('<bg=black;fg=green> %s</>', afterDumpNewLines: 1),
 			)
 			->ioDump(
 				$this->t->trans('###< СПРАВКА ###'),

@@ -471,9 +471,9 @@ class JoinCommand extends AbstractCommand
         $this->beautyDump($output);
 
         $infos = [
-            $this->t->trans('Видео:'),
-            $this->t->trans('Аудио:'),
-            $this->t->trans('Результат:'),
+            $this->t->trans('Видео') . ':',
+            $this->t->trans('Аудио') . ':',
+            $this->t->trans('Результат') . ':',
         ];
 
         foreach (

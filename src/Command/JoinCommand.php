@@ -114,6 +114,7 @@ class JoinCommand extends AbstractCommand
         private string $endmarkOutputVideoFilename,
         private $gsServiceCarbonFactory,
         private readonly OSService $osService,
+        private readonly bool $showFilmHelpInfo,
     ) {
         parent::__construct(
             devLogger:          $devLogger,
@@ -188,6 +189,7 @@ class JoinCommand extends AbstractCommand
         ;
     }
 
+	/* AbstractCommand */
     protected function initialize(
         InputInterface $input,
         OutputInterface $output,
@@ -197,12 +199,15 @@ class JoinCommand extends AbstractCommand
         $this->fromRoot = $this->getRoot();
     }
 
+	/* AbstractCommand */
     protected function execute(
         InputInterface $input,
         OutputInterface $output,
     ) {
-        $this->dumpHelpInfo($output);
-
+        if ($this->showFilmHelpInfo) {
+			$this->dumpHelpInfo($output);
+		}
+		
         return parent::execute(
             $input,
             $output,
@@ -245,7 +250,7 @@ class JoinCommand extends AbstractCommand
             return self::WIN_KEY;
         }
 
-        //I'm not entirely sure about your os but I'll let you execute this file'
+        //I'm not entirely sure about your os but I'll let you execute this file
         return null;
     }
 

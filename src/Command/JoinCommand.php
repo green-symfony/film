@@ -114,6 +114,7 @@ class JoinCommand extends AbstractCommand
         private string $endmarkOutputVideoFilename,
         private $gsServiceCarbonFactory,
         private readonly OSService $osService,
+        private readonly bool $showFilmHelpInfo,
     ) {
         parent::__construct(
             devLogger:          $devLogger,
@@ -188,6 +189,7 @@ class JoinCommand extends AbstractCommand
         ;
     }
 
+	/* AbstractCommand */
     protected function initialize(
         InputInterface $input,
         OutputInterface $output,
@@ -197,12 +199,15 @@ class JoinCommand extends AbstractCommand
         $this->fromRoot = $this->getRoot();
     }
 
+	/* AbstractCommand */
     protected function execute(
         InputInterface $input,
         OutputInterface $output,
     ) {
-        $this->dumpHelpInfo($output);
-
+        if ($this->showFilmHelpInfo) {
+			$this->dumpHelpInfo($output);
+		}
+		
         return parent::execute(
             $input,
             $output,
@@ -221,7 +226,9 @@ class JoinCommand extends AbstractCommand
 
         $this->ffmpegExec($output);
 
-        $this->getIo()->success($this->endTitle);
+        $this->getIo()->success(
+			$this->t->trans($this->endTitle),
+		);
 
         return Command::SUCCESS;
     }
@@ -245,7 +252,7 @@ class JoinCommand extends AbstractCommand
             return self::WIN_KEY;
         }
 
-        //I'm not entirely sure about your os but I'll let you execute this file'
+        //I'm not entirely sure about your os but I'll let you execute this file
         return null;
     }
 
@@ -466,9 +473,9 @@ class JoinCommand extends AbstractCommand
         $this->beautyDump($output);
 
         $infos = [
-            $this->t->trans('Видео:'),
-            $this->t->trans('Аудио:'),
-            $this->t->trans('Результат:'),
+            $this->t->trans('Видео') . ':',
+            $this->t->trans('Аудио') . ':',
+            $this->t->trans('Результат') . ':',
         ];
 
         foreach (

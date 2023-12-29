@@ -24,4 +24,4 @@ ready:                                  готов
 error:
     os:
         ffmpeg: 'Невозможно использовать исполняемый файл %ffmpeg% для вашей операционной системы, смотри "https://github.com/green-symfony/film#another-operating-system" секцию Another Operating System'
-        
+End: "Конец"

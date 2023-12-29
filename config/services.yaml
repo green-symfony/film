@@ -35,6 +35,8 @@ services:
             $gsServiceSlashOfIpRegex:            '%gs_service.slash_of_ip_regex%'
             $progressBarSpin:           '%gs_command.progress_bar_spin%'
             $devLogger:                 '@monolog.logger.gs_command.dev_logger'
+            
+            $showFilmHelpInfo:          '%env(SHOW_FILM_HELP_INFO)%'
             ###< PARAMETERS ###
             
             ###> SERVICES ###

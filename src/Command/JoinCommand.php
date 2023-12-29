@@ -226,7 +226,9 @@ class JoinCommand extends AbstractCommand
 
         $this->ffmpegExec($output);
 
-        $this->getIo()->success($this->endTitle);
+        $this->getIo()->success(
+			$this->t->trans($this->endTitle),
+		);
 
         return Command::SUCCESS;
     }

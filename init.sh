@@ -26,4 +26,4 @@ cd ".."
 cd "../.."
 composer install
 composer dump-autoload -o
-php "./bin/film" "c:c"
+php "./bin/film" "cache:clear" "-q"

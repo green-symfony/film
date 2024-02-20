@@ -344,8 +344,10 @@ class JoinCommand extends AbstractCommand
                 . (string) u($this->ffmpegAlgorithmForOutputVideo)->ensureEnd(' ')->ensureStart(' ')
                 . '"' . $outputVideoFilename . '"'
             ;
-            //\dd($command);
-            $result_code = null;
+            
+			//\dd($command);
+            
+			$result_code = null;
             $getOsNameByFileExt = $this->getOsNameByFileExt(...);
             $this->osService
                 ->setCallback(

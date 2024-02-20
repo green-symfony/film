@@ -333,6 +333,8 @@ class JoinCommand extends AbstractCommand
                 'inputAudioFilename'        => $inputAudioFilename,
                 'outputVideoFilename'       => $outputVideoFilename,
             ] = $commandPart;
+			
+            $relativeOutputVideoFilename = $this->makePathRelative($outputVideoFilename);
 
             // ffmpeg algorithm
             $ffmpegAbsPath = Path::normalize($this->ffmpegAbsPath);
@@ -345,20 +347,27 @@ class JoinCommand extends AbstractCommand
                 . '"' . $outputVideoFilename . '"'
             ;
             
-			//\dd($command);
+			//\dd($outputVideoFilename);
             
 			$result_code = null;
             $getOsNameByFileExt = $this->getOsNameByFileExt(...);
-            $this->osService
-                ->setCallback(
-                    static fn() => $getOsNameByFileExt($ffmpegAbsPath),
-                    'ffmpeg',
-                    static function () use (&$command, &$result_code) {
-                        \system($command, $result_code);
-                        return true;
-                    },
-                )
-            ;
+            $this->osService->setCallback(
+				static fn() => $getOsNameByFileExt($ffmpegAbsPath),
+				'ffmpeg',
+				static function () use (&$command, &$result_code) {
+					\system($command, $result_code);
+					return true;
+				},
+			);
+			
+			// DUMP INFO DURING THE PROCESS
+			$this->ioDump(
+				$relativeOutputVideoFilename,
+				new GSCommandDumper\FormattedIODumper(
+					"<bg=black;fg=white;options=bold>%s</>",
+				),
+			);
+			
             $wasMade = ($this->osService)(
                 callbackKey: 'ffmpeg',
                 removeCallbackAfterExecution: true,
@@ -382,12 +391,11 @@ class JoinCommand extends AbstractCommand
             }
 
             // dump
-            $outputVideoFilename = $this->makePathRelative($outputVideoFilename);
             $this->getIo()->warning([
-                $outputVideoFilename . (string) u('(' . $this->t->trans('ready') . ')')->ensureStart(' '),
+                $relativeOutputVideoFilename . (string) u('(' . $this->t->trans('ready') . ')')->ensureStart(' '),
             ]);
 
-            $resultsFilenames [] = $outputVideoFilename;
+            $resultsFilenames [] = $relativeOutputVideoFilename;
         });
 
         if (\count($resultsFilenames) > 1) {

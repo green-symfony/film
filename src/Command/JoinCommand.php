@@ -400,30 +400,17 @@ class JoinCommand extends AbstractCommand
     {
         $this->assignNonExistentToDirname();
 
-        //###> HUMAN SORT
-        $humanSort = static fn($l, $r): bool => (
-            ((int) \preg_replace('~[^0-9]+~', '', $l)) > ((int) \preg_replace('~[^0-9]+~', '', $r))
-        );
-
-        //###> EXT SORT
-        $arrayOfSupportedFfmpegVideoFormats = $this->arrayOfSupportedFfmpegVideoFormats;
-        $extSortPrivate = $this->extSort(...);
-        $extSort = static fn(
-            $l,
-            $r,
-        ): bool => $extSortPrivate($l, $r, $arrayOfSupportedFfmpegVideoFormats);
-
         $finderInputVideoFilenames = (new Finder())
             ->in($this->fromRoot)
-            ->sort($humanSort)->sort($extSort)
-            ->files()
+			->sort($this->humanSort(...))
+			->files()
             ->ignoreUnreadableDirs()
             ->depth(0)
             ->name($this->arrayOfSupportedFfmpegVideoFormatsRegex)
         ;
-
+		
         $arrayInputVideos = \iterator_to_array($finderInputVideoFilenames, false);
-        if (isset($arrayInputVideos[0])) {
+		if (isset($arrayInputVideos[0])) {
             $firstInputVideoExt = $arrayInputVideos[0]->getExtension();
             if ($this->firstInputVideoExt === null) {
                 $this->firstInputVideoExt = $firstInputVideoExt;
@@ -598,21 +585,15 @@ class JoinCommand extends AbstractCommand
         $inputVideoFilenameWithoutExtension = $finderInputVideoFilename->getFilenameWithoutExtension();
         $inputVideoFilenameWithExtension = $finderInputVideoFilename->getRelativePathname();
 
-        //###> SORT
+        //###> SORT (LESS DEEP THAN FIRST)
         $shorterFirst = static fn($l, $r): bool => (
             \mb_strlen($l->getRelativePathname()) > \mb_strlen($r->getRelativePathname())
         );
-        $arrayOfSupportedFfmpegAudioFormats = $this->arrayOfSupportedFfmpegAudioFormats;
-        $extSortPrivate = $this->extSort(...);
-        $extSort = static fn(
-            $l,
-            $r,
-        ): bool => $extSortPrivate($l, $r, $arrayOfSupportedFfmpegAudioFormats);
 
         $finderInputAudioFilenames = (new Finder())
             ->in($this->fromRoot)
             ->files()
-            ->sort($extSort)->sort($shorterFirst)
+            ->sort($shorterFirst)
             ->ignoreUnreadableDirs()
             ->depth(self::INPUT_AUDIO_FIND_DEPTH)
             ->name(
@@ -622,7 +603,8 @@ class JoinCommand extends AbstractCommand
                     . '$~'
             )
         ;
-
+		
+		// EXCLUDE THE SAME VIDEO FILE
         if ($this->firstInputVideoExt !== null) {
             $audioNotRelNameRegex = '~^'
                 . $this->regexService->getEscapedStrings(
@@ -639,7 +621,7 @@ class JoinCommand extends AbstractCommand
                 \iterator_to_array($finderInputAudioFilenames),
             )
         );
-
+		
         while (isset($inputAudioFilenames[0])) {
             $zeroInputAudioFilename = $inputAudioFilenames[0];
 
@@ -649,6 +631,7 @@ class JoinCommand extends AbstractCommand
             }
             \array_shift($inputAudioFilenames);
         }
+		
 
         return $inputAudioFilename;
     }
@@ -663,6 +646,26 @@ class JoinCommand extends AbstractCommand
         return \rtrim($this->filesystem->makePathRelative($needyPath, $this->fromRoot), '/');
     }
 
+    private function humanSort(
+        SplFileInfo $l,
+        SplFileInfo $r,
+    ): bool {
+        $LName = $this->stringService->getPath(
+			$l->getRelativePath(),
+			$l->getFilenameWithoutExtension(),
+		);
+        $RName = $this->stringService->getPath(
+			$r->getRelativePath(),
+			$r->getFilenameWithoutExtension(),
+		);
+
+		$regex = '~[^0-9]+~';
+		$LNumber = (int) \preg_replace($regex, '', $LName);
+		$RNumber = (int) \preg_replace($regex, '', $RName);
+
+		return $LNumber > $RNumber;
+    }
+
     private function extSort(
         SplFileInfo $l,
         SplFileInfo $r,
@@ -675,8 +678,8 @@ class JoinCommand extends AbstractCommand
 
         if (
             false
-            || !isset($supportedVideoFormatsFlipped[$Lkey])
-            || !isset($supportedVideoFormatsFlipped[$Rkey])
+            || !isset($supported[$Lkey])
+            || !isset($supported[$Rkey])
         ) {
             return false;
         }

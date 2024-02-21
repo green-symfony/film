@@ -80,10 +80,11 @@ class JoinCommand extends AbstractCommand
             ...
         ]
     */
-    private array $commandParts     = [];
-    private ?string $fromRoot       = null;
-    private ?string $toDirname      = null;
-    private int $allVideosCount     = 0;
+    private array $commandParts      = [];
+    private ?string $fromRoot        = null;
+    private ?string $toDirname       = null;
+    private int $allVideosCount      = 0;
+    private int $countVideoWithAudio = 0;
     private readonly string $supportedFfmpegVideoFormats;
     private readonly string $supportedFfmpegAudioFormats;
     private readonly array $arrayOfSupportedFfmpegVideoFormatsRegex;
@@ -243,16 +244,19 @@ class JoinCommand extends AbstractCommand
 
     //###> CAN OVERRIDE ###
 
+	/*
+		return the \php_uname(mode: "s") of your OS if you can execute this file
+		return null if the OS is not appropriate
+	*/
     protected function getOsNameByFileExt(
         string $path,
-    ): string {
+    ): ?string {
         $isWinExt = \str_ends_with(\strtolower($path), 'exe');
 
-        if ($isWinExt) {
+		if ($isWinExt) {
             return self::WIN_KEY;
         }
 
-        //I'm not entirely sure about your os but I'll let you execute this file
         return null;
     }
 
@@ -327,7 +331,8 @@ class JoinCommand extends AbstractCommand
         $this->filesystem->mkdir($this->stringService->getPath($this->getRoot(), $this->toDirname));
 
         $resultsFilenames = [];
-        \array_walk($this->commandParts, function (&$commandPart) use (&$resultsFilenames, &$output) {
+		$currentVideoNumber = 0;
+        \array_walk($this->commandParts, function (&$commandPart) use (&$resultsFilenames, &$output, &$currentVideoNumber) {
             [
                 'inputVideoFilename'        => $inputVideoFilename,
                 'inputAudioFilename'        => $inputAudioFilename,
@@ -361,12 +366,19 @@ class JoinCommand extends AbstractCommand
 			);
 			
 			// DUMP INFO DURING THE PROCESS
-			$this->ioDump(
-				$relativeOutputVideoFilename,
-				new GSCommandDumper\FormattedIODumper(
-					"<bg=black;fg=white;options=bold>%s</>",
-				),
-			);
+			$partOfTheProcess = '[' . ++$currentVideoNumber . ' / ' . $this->countVideoWithAudio . ']';
+			$nameFormat = "<bg=black;fg=white;options=bold>%s</>";
+			$numberFormat = "<bg=white;fg=black>%s</>";
+			$this->getCloneTable()
+				->setHeaders(
+					[
+						\sprintf($nameFormat, $relativeOutputVideoFilename),
+						\sprintf($numberFormat, $partOfTheProcess),
+					],
+				)
+				->setHorizontal(false)
+				->render()
+			;
 			
             $wasMade = ($this->osService)(
                 callbackKey: 'ffmpeg',
@@ -455,6 +467,8 @@ class JoinCommand extends AbstractCommand
                 'outputVideoFilename'       => $this->stringService->getPath($this->fromRoot, $this->toDirname, $outputVideoFilename),
             ];
         }
+		
+		$this->countVideoWithAudio = \count($this->commandParts);
     }
 
     private function dumpCommandParts(
@@ -519,18 +533,18 @@ class JoinCommand extends AbstractCommand
 		$videoWithAudioDopFormat = '';
 		
 		if ($allFoundVideos != $videosWithAudio) {
-			$videoWithAudioDopFormat = ',bold';
+			$videoWithAudioDopFormat = ';options=underscore,bold';
 		}
 		
 		$this->getCloneTable()
 			->setHeaders([
 				$sumUpStrings[0],
-				\sprintf($videoWithAudioFormat, ';options=underscore' . $videoWithAudioDopFormat) . $sumUpStrings[1] . '</>',
+				\sprintf($videoWithAudioFormat, $videoWithAudioDopFormat) . $sumUpStrings[1] . '</>',
 			])
 			->setRows([
 				[
 					$allFoundVideos,
-					\sprintf($videoWithAudioFormat, ';options=underscore' . $videoWithAudioDopFormat) . $videosWithAudio . '</>',
+					\sprintf($videoWithAudioFormat, $videoWithAudioDopFormat) . $videosWithAudio . '</>',
 				],
 			])
 			->render()

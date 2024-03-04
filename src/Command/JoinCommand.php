@@ -478,9 +478,8 @@ class JoinCommand extends AbstractCommand
                 'inputAudioFilename'        => $this->stringService->getPath($this->fromRoot, $inputAudioFilename),
                 'outputVideoFilename'       => $this->stringService->getPath($this->fromRoot, $this->toDirname, $outputVideoFilename),
             ];
+			++$this->countVideoWithAudio;
         }
-		
-		$this->countVideoWithAudio = \count($this->commandParts);
     }
 
     private function dumpCommandParts(

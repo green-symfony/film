@@ -332,83 +332,95 @@ class JoinCommand extends AbstractCommand
 
         $resultsFilenames = [];
 		$currentVideoNumber = 0;
-        \array_walk($this->commandParts, function (&$commandPart) use (&$resultsFilenames, &$output, &$currentVideoNumber) {
-            [
-                'inputVideoFilename'        => $inputVideoFilename,
-                'inputAudioFilename'        => $inputAudioFilename,
-                'outputVideoFilename'       => $outputVideoFilename,
-            ] = $commandPart;
-			
-            $relativeOutputVideoFilename = $this->makePathRelative($outputVideoFilename);
+        \array_walk(
+			$this->commandParts,
+			function (&$commandPart) use (
+				&$resultsFilenames,
+				&$output,
+				&$currentVideoNumber,
+			) {
+				[
+					'inputVideoFilename'        => $inputVideoFilename,
+					'inputAudioFilename'        => $inputAudioFilename,
+					'outputVideoFilename'       => $outputVideoFilename,
+				] = $commandPart;
+				
+				$relativeOutputVideoFilename = $this->makePathRelative($outputVideoFilename);
 
-            // ffmpeg algorithm
-            $ffmpegAbsPath = Path::normalize($this->ffmpegAbsPath);
-            $command    = '"' . $this->stringService->getPath($ffmpegAbsPath) . '"'
-                . (string) u($this->ffmpegAlgorithmForInputVideo)->ensureEnd(' ')->ensureStart(' ')
-                . '"' . $inputVideoFilename . '"'
-                . (string) u($this->ffmpegAlgorithmForInputAudio)->ensureEnd(' ')->ensureStart(' ')
-                . '"' . $inputAudioFilename . '"'
-                . (string) u($this->ffmpegAlgorithmForOutputVideo)->ensureEnd(' ')->ensureStart(' ')
-                . '"' . $outputVideoFilename . '"'
-            ;
-            
-			//\dd($outputVideoFilename);
-            
-			$result_code = null;
-            $getOsNameByFileExt = $this->getOsNameByFileExt(...);
-            $this->osService->setCallback(
-				static fn() => $getOsNameByFileExt($ffmpegAbsPath),
-				'ffmpeg',
-				static function () use (&$command, &$result_code) {
-					\system($command, $result_code);
-					return true;
-				},
-			);
-			
-			// DUMP INFO DURING THE PROCESS
-			$partOfTheProcess = '[' . ++$currentVideoNumber . ' / ' . $this->countVideoWithAudio . ']';
-			$nameFormat = "<bg=black;fg=white;options=bold>%s</>";
-			$numberFormat = "<bg=white;fg=black>%s</>";
-			$this->getCloneTable()
-				->setHeaders(
-					[
-						\sprintf($nameFormat, $relativeOutputVideoFilename),
-						\sprintf($numberFormat, $partOfTheProcess),
-					],
-				)
-				->setHorizontal(false)
-				->render()
-			;
-			
-            $wasMade = ($this->osService)(
-                callbackKey: 'ffmpeg',
-                removeCallbackAfterExecution: true,
-            );
+				// ffmpeg algorithm
+				$ffmpegAbsPath = Path::normalize($this->ffmpegAbsPath);
+				$command    = '"' . $this->stringService->getPath($ffmpegAbsPath) . '"'
+					. (string) u($this->ffmpegAlgorithmForInputVideo)->ensureEnd(' ')->ensureStart(' ')
+					. '"' . $inputVideoFilename . '"'
+					. (string) u($this->ffmpegAlgorithmForInputAudio)->ensureEnd(' ')->ensureStart(' ')
+					. '"' . $inputAudioFilename . '"'
+					. (string) u($this->ffmpegAlgorithmForOutputVideo)->ensureEnd(' ')->ensureStart(' ')
+					. '"' . $outputVideoFilename . '"'
+				;
+				
+				$getOsNameByFileExt = $this->getOsNameByFileExt(...);
+				$this->osService->setCallback(
+					static fn() => $getOsNameByFileExt($ffmpegAbsPath),
+					'ffmpeg',
+					static function () use (
+						$command,
+						$outputVideoFilename,
+					) {
+						$result_code = null;
+						try {
+							\exec($command, result_code: $result_code);							
+						} finally {
+							if ($result_code !== 0) {
+								$this->filesystem->deleteByAbsPathIfExists(
+									$outputVideoFilename,
+								);
+								$this->devLogger->info(
+									'$result_code: ' . $result_code,
+									['$outputVideoFilename' => $outputVideoFilename],
+								);
+								$this->shutdown();
+							}						
+						}
+						return true;
+					},
+				);
+				
+				// DUMP INFO DURING THE PROCESS
+				$partOfTheProcess = '[' . ++$currentVideoNumber . ' / ' . $this->countVideoWithAudio . ']';
+				$nameFormat = "<bg=black;fg=white;options=bold>%s</>";
+				$numberFormat = "<bg=white;fg=black>%s</>";
+				$this->getCloneTable()
+					->setHeaders(
+						[
+							\sprintf($nameFormat, $relativeOutputVideoFilename),
+							\sprintf($numberFormat, $partOfTheProcess),
+						],
+					)
+					->setHorizontal(false)
+					->render()
+				;
+				
+				$wasMade = ($this->osService)(
+					callbackKey: 'ffmpeg',
+					removeCallbackAfterExecution: true,
+				);
 
-            $this->devLogger->info(
-                '$result_code: ' . $result_code,
-                ['$outputVideoFilename' => $outputVideoFilename],
-            );
+				if ($wasMade !== true) {
+					$this->exit(
+						$this->t->trans('error.os.ffmpeg', ['%ffmpeg%' => $ffmpegAbsPath]),
+						style: 'error',
+					);
+					return;
+				}
 
-            if ($wasMade !== true) {
-                $this->exit(
-                    $this->t->trans('error.os.ffmpeg', ['%ffmpeg%' => $ffmpegAbsPath]),
-                    style: 'error',
-                );
-                return;
-            }
+				// dump
+				$this->getIo()->warning([
+					$relativeOutputVideoFilename . (string) u('(' . $this->t->trans('ready') . ')')->ensureStart(' '),
+				]);
 
-            if ($result_code !== 0) {
-                $this->shutdown();
-            }
-
-            // dump
-            $this->getIo()->warning([
-                $relativeOutputVideoFilename . (string) u('(' . $this->t->trans('ready') . ')')->ensureStart(' '),
-            ]);
-
-            $resultsFilenames [] = $relativeOutputVideoFilename;
-        });
+				$resultsFilenames [] = $relativeOutputVideoFilename;
+			}
+		);
 
         if (\count($resultsFilenames) > 1) {
             $this->getIo()->info([

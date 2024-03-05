@@ -358,27 +358,28 @@ class JoinCommand extends AbstractCommand
 					. '"' . $outputVideoFilename . '"'
 				;
 				
+				//###>
 				$getOsNameByFileExt = $this->getOsNameByFileExt(...);
+				$filesystemRemoveFunc = $this->filesystem->remove(...);
+				$shutdown = $this->shutdown(...);
 				$this->osService->setCallback(
 					static fn() => $getOsNameByFileExt($ffmpegAbsPath),
 					'ffmpeg',
 					static function () use (
 						$command,
 						$outputVideoFilename,
+						&$filesystemRemoveFunc,
+						&$shutdown,
 					) {
 						$result_code = null;
 						try {
 							\exec($command, result_code: $result_code);							
 						} finally {
 							if ($result_code !== 0) {
-								$this->filesystem->deleteByAbsPathIfExists(
-									$outputVideoFilename,
-								);
-								$this->devLogger->info(
-									'$result_code: ' . $result_code,
-									['$outputVideoFilename' => $outputVideoFilename],
-								);
-								$this->shutdown();
+								if (\is_file($outputVideoFilename)) {
+									$filesystemRemoveFunc($outputVideoFilename);
+								}
+								$shutdown();
 							}						
 						}
 						return true;

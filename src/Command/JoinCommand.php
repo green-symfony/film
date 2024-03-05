@@ -373,7 +373,7 @@ class JoinCommand extends AbstractCommand
 					) {
 						$result_code = null;
 						try {
-							\exec($command, result_code: $result_code);							
+							\exec($command, result_code: $result_code);						
 						} finally {
 							if ($result_code !== 0) {
 								if (\is_file($outputVideoFilename)) {
